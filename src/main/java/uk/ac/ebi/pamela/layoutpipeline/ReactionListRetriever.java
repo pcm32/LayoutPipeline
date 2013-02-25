@@ -13,5 +13,5 @@ import uk.ac.ebi.mdk.domain.entity.Reconstruction;
  */
 public interface ReactionListRetriever {
     
-    public Reconstruction getReactionsAsReconstruction(Query query);
+    public List<Reconstruction> getReactionsAsReconstructions(Query query);
 }

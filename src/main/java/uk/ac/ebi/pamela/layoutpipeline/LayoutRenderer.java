@@ -13,6 +13,6 @@ import org.sbml.jsbml.SBMLDocument;
  */
 public interface LayoutRenderer {
     
-    public void produceRender(SBMLDocument sbmlWithLayout, OutputStream outputStream);
+    public void produceRender(SBMLDocument sbmlWithLayout, String outputFilePrefix);
     
 }
