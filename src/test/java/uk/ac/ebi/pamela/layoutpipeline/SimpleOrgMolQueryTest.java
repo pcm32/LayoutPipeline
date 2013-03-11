@@ -1,6 +1,8 @@
 package uk.ac.ebi.pamela.layoutpipeline;
 
 
+import org.junit.Test;
+
 import static junit.framework.Assert.* ;
 /**
  * Created with IntelliJ IDEA.
@@ -10,13 +12,14 @@ import static junit.framework.Assert.* ;
  * To change this template use File | Settings | File Templates.
  */
 public class SimpleOrgMolQueryTest {
+    @Test
     public void testGetters() throws Exception {
 
-        SimpleOrgMolQuery query = new SimpleOrgMolQuery("chebiId", "taxid");
+        SimpleOrgMolQuery query = new SimpleOrgMolQuery("chebiid", "3130");
 
-        assertEquals("CHEBI ID initialization test" , "chebiid", query.getChemicalIdentifier());
+        assertEquals("CHEBI ID initialization test" , "chebiid", query.getChemicalIdentifier().getAccession());
 
-        assertEquals("TAX ID initialization test" , "taxid", query.getOrganismIdentifier());
+        assertEquals("TAX ID initialization test" , "3130", query.getOrganismIdentifier().getAccession());
 
     }
 }
