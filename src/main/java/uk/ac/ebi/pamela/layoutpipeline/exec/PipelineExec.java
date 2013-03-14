@@ -61,7 +61,7 @@ public class PipelineExec {
      * @param layoutRend
      * @param sbmlLevel
      * @param sbmlVersion
-     * @param imageOutputStream
+     * @param imageOutputPath
      */
     public PipelineExec(Query query, ReactionListRetriever retriever, LayoutAlgorithm layoutAlg, LayoutRenderer layoutRend,
             Integer sbmlLevel, Integer sbmlVersion, String imageOutputPath) {
