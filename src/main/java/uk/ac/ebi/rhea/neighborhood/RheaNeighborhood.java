@@ -109,6 +109,7 @@ public final class RheaNeighborhood {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
+        return null;
 
     }
 
@@ -135,6 +136,8 @@ public final class RheaNeighborhood {
             }
 
         }
+
+        return null;
 
     }
 
