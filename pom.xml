@@ -53,21 +53,11 @@
       <version>1.3.2</version>
     </dependency>
     <dependency>
-          <groupId>uk.ac.ebi.rhea</groupId>
-          <artifactId>rhea-ws-client</artifactId>
-          <version>1.0</version>
-      </dependency>
-      <!--<dependency>-->
-          <!--<groupId>uk.ac.ebi.rhea</groupId>-->
-          <!--<artifactId>rhea-ws-domain</artifactId>-->
-          <!--<version>1.0.2</version>-->
-      <!--</dependency>-->
+      <groupId>uk.ac.ebi.rhea</groupId>
+      <artifactId>rhea-mapper</artifactId>
+      <version>3.7.1</version>
+    </dependency>
 
-      <!--<dependency>-->
-          <!--<groupId>uk.ac.ebi.rhea</groupId>-->
-          <!--<artifactId>rhea-domain</artifactId>-->
-          <!--<version>1.7.0</version>-->
-      <!--</dependency>-->
   </dependencies>
   
   <repositories>

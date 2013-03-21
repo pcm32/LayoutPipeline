@@ -25,7 +25,7 @@ public class SBWRendererTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
-        InputStream fileIn = SBWRendererTest.class.getClassLoader().getResourceAsStream("application.properties");
+        InputStream fileIn = SBWRendererTest.class.getClassLoader().getResourceAsStream("test.properties");
         props.load(fileIn);
 
     }

@@ -25,7 +25,7 @@ public class SBWAutoLayouterAlgorithmTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
-        InputStream fileIn = SBWAutoLayouterAlgorithmTest.class.getClassLoader().getResourceAsStream("application.properties");
+        InputStream fileIn = SBWAutoLayouterAlgorithmTest.class.getClassLoader().getResourceAsStream("test.properties");
         props.load(fileIn);
 
     }

@@ -8,4 +8,6 @@ package uk.ac.ebi.rhea.neighborhood;
  * To change this template use File | Settings | File Templates.
  */
 public interface ECNumberChecker {
+
+    public boolean check(String ecNumber);
 }

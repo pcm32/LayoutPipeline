@@ -1,5 +1,7 @@
 package uk.ac.ebi.pamela.layoutpipeline.utils;
 
+import static org.junit.Assert.*;
+import org.junit.Test;
 /**
  * Created with IntelliJ IDEA.
  * User: conesa
@@ -9,6 +11,14 @@ package uk.ac.ebi.pamela.layoutpipeline.utils;
  */
 public class PropertiesUtilsTest {
 
+    @Test
+    public void testProperties(){
 
+        String user = PropertiesUtil.getProperty("rhea.username");
+        assertTrue(PropertiesUtil.getProperty("rhea.username") != null);
+        assertTrue(PropertiesUtil.getProperty("rhea.password") != null);
+        assertTrue(PropertiesUtil.getProperty("rhea.url") != null);
+
+    }
 
 }

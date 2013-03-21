@@ -8,4 +8,5 @@ package uk.ac.ebi.rhea.neighborhood;
  * To change this template use File | Settings | File Templates.
  */
 public interface ExclusionMetaboliteChecker {
+    public boolean check(String chebiId);
 }

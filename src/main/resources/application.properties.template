@@ -1,0 +1,6 @@
+# Database parameters
+rhea.username=xxxx
+rhea.password=xxxx
+
+# Oracle settings
+rhea.url=xxxx
