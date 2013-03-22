@@ -14,14 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package uk.ac.ebi.pamela.layoutpipeline;
 
-import uk.ac.ebi.pamela.layoutpipeline.pamela.DataSetSelector;
+import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import com.sri.biospice.warehouse.database.Warehouse;
 import com.sri.biospice.warehouse.schema.DataSet;
 import com.sri.biospice.warehouse.schema.object.Chemical;
-import com.sri.biospice.warehouse.schema.object.Reaction;
 import uk.ac.ebi.metabolomes.biowh.BioChemicalReactionSetProviderFactory;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,12 +32,12 @@ import uk.ac.ebi.pamela.layoutpipeline.reaction.PAMELARecursiveReactionGetter;
 import uk.ac.ebi.warehouse.util.ChemicalUtil;
 
 /**
- * @name    PAMELAReactionListRetriever
- * @date    2013.03.19
+ * @name PAMELAReactionListRetriever
+ * @date 2013.03.19
  * @version $Rev$ : Last Changed $Date$
- * @author  Pablo Moreno <pablacious at users.sf.net>
- * @author  $Author$ (this version)
- * @brief   ...class description...
+ * @author Pablo Moreno <pablacious at users.sf.net>
+ * @author $Author$ (this version)
+ * @brief ...class description...
  *
  */
 public class PAMELAReactionListRetriever extends AbstractReactionListRetriever implements ReactionListRetriever {
@@ -47,38 +45,36 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
     private DataSet ds;
     private DataSetSelector dsSel;
     private Integer reactionDepth;
-    
-    
+
     public PAMELAReactionListRetriever(DataSetSelector dsSel) throws IOException, SQLException {
         BiowhPooledConnection bwhc = new BiowhPooledConnection();
         Warehouse bwh = bwhc.getWarehouseObject();
         this.dsSel = dsSel;
     }
-    
-    
-    protected Iterable<MetabolicReaction> getReactions(Query query) {
+
+    Iterable<MetabolicReaction> getReactions(Query query) {
         this.ds = dsSel.getDataSetForOrganism(query.getOrganismIdentifier());
-        
+
         List<MetabolicReaction> reactions = new ArrayList<MetabolicReaction>();
-        
+
         // Search for chemical identifier in data set
-        
-        BiochemicalReactionSetProvider provider = 
+
+        BiochemicalReactionSetProvider provider =
                 BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
-        
+
         // Get small molecule that has the provided Cross reference.
-        /*List<Chemical> chemsWithId = ChemicalUtil.getChemicalWithCrossReference(query.getChemicalIdentifier().getAccession(), 
-                query.getChemicalIdentifier().getShortDescription(), ds.getWID());
-        
-        PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(3,);
-        
-        for (Chemical chemical : chemsWithId) {
-            reactions.addAll(rxnGetter.getReactions(chemical));
-        }*/
-        
-        return null;
-        
+        try {
+            List<Chemical> chemsWithId = ChemicalUtil.getChemicalWithCrossReference(query.getChemicalIdentifier().getAccession(),
+                    query.getChemicalIdentifier().getShortDescription(), ds.getWID());
+
+            //PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(ds, reactionDepth,);
+
+            for (Chemical chemical : chemsWithId) {
+              //  reactions.addAll(rxnGetter.getReactions(chemical));
+            }
+        } catch (SQLException e) {
+        }
+
+        return reactions;
     }
-
-
 }
