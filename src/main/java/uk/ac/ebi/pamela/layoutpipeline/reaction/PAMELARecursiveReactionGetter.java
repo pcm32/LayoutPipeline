@@ -17,10 +17,15 @@
 
 package uk.ac.ebi.pamela.layoutpipeline.reaction;
 
+import com.sri.biospice.warehouse.schema.DataSet;
 import com.sri.biospice.warehouse.schema.object.Chemical;
 import com.sri.biospice.warehouse.schema.object.Reaction;
+import java.sql.SQLException;
 import java.util.Collection;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.metabolomes.biowh.BioChemicalReactionSetProviderFactory;
+import uk.ac.ebi.metabolomes.biowh.BiochemicalReactionSetProvider;
+import uk.ac.ebi.warehouse.util.ReactionUtil;
 
 /**
  * @name    PAMELARecursiveReactionGetter
@@ -33,18 +38,26 @@ import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
  */
 public class PAMELARecursiveReactionGetter extends AbstractRecursiveReactionGetter<Chemical, Reaction>{
     
-    public PAMELARecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<Chemical,Reaction> currencyDecider, MainCompoundDecider<Chemical,Reaction> mainCompDecider) {
+    private BiochemicalReactionSetProvider provider;
+    
+    public PAMELARecursiveReactionGetter(DataSet ds, Integer depth, CurrencyCompoundDecider<Chemical,Reaction> currencyDecider, MainCompoundDecider<Chemical,Reaction> mainCompDecider) {
         super(depth,currencyDecider,mainCompDecider);
+        this.provider = BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
     }
 
     @Override
     Collection<Reaction> getReactionsForChemical(Chemical chem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return ReactionUtil.getBWHReactionsForChemical(chem);
     }
 
     @Override
     MetabolicReaction convertReaction(Reaction rxn) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            return provider.getBioChemicalRXNFromRxn(rxn);
+        } catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        
     }
 
 
