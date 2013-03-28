@@ -40,9 +40,11 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     private MainCompoundDecider<C, R> mainCompDec;
     private Integer depth;
 
-    public AbstractRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<C, R> currencyDec, MainCompoundDecider<C, R> mainCompDec) {        
+    public AbstractRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<C, R> currencyDec, MainCompoundDecider<C, R> mainCompDec) {
+        this.depth = depth;
         this.currencyDec = currencyDec;
         this.mainCompDec = mainCompDec;
+
     }
 
     /**
