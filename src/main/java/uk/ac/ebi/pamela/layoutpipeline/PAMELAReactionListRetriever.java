@@ -17,17 +17,22 @@
 package uk.ac.ebi.pamela.layoutpipeline;
 
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
-import com.sri.biospice.warehouse.database.Warehouse;
 import com.sri.biospice.warehouse.schema.DataSet;
 import com.sri.biospice.warehouse.schema.object.Chemical;
+import com.sri.biospice.warehouse.schema.object.Reaction;
 import uk.ac.ebi.metabolomes.biowh.BioChemicalReactionSetProviderFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.metabolomes.biowh.BiochemicalReactionSetProvider;
 import uk.ac.ebi.metabolomes.biowh.BiowhPooledConnection;
+import uk.ac.ebi.pamela.layoutpipeline.reaction.BWHConnectivityBasedCurrencyDecider;
+import uk.ac.ebi.pamela.layoutpipeline.reaction.BWHDummyMainCompDecider;
+import uk.ac.ebi.pamela.layoutpipeline.reaction.CurrencyCompoundDecider;
+import uk.ac.ebi.pamela.layoutpipeline.reaction.MainCompoundDecider;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.PAMELARecursiveReactionGetter;
 import uk.ac.ebi.warehouse.util.ChemicalUtil;
 
@@ -45,15 +50,18 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
     private DataSet ds;
     private DataSetSelector dsSel;
     private Integer reactionDepth;
+    private CurrencyCompoundDecider<Chemical,Reaction> currencyDecider;
+    private MainCompoundDecider<Chemical,Reaction> mainCompoundDecider;
 
-    public PAMELAReactionListRetriever(DataSetSelector dsSel) throws IOException, SQLException {
-        BiowhPooledConnection bwhc = new BiowhPooledConnection();
-        Warehouse bwh = bwhc.getWarehouseObject();
+    public PAMELAReactionListRetriever(DataSetSelector dsSel, Taxonomy organism) throws IOException, SQLException {
+        BiowhPooledConnection bwhc = new BiowhPooledConnection();        
         this.dsSel = dsSel;
+        this.ds = dsSel.getDataSetForOrganism(organism);
+        this.currencyDecider = new BWHConnectivityBasedCurrencyDecider(ds);
+        this.mainCompoundDecider = new BWHDummyMainCompDecider();
     }
 
     Iterable<MetabolicReaction> getReactions(Query query) {
-        this.ds = dsSel.getDataSetForOrganism(query.getOrganismIdentifier());
 
         List<MetabolicReaction> reactions = new ArrayList<MetabolicReaction>();
 
@@ -67,10 +75,10 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
             List<Chemical> chemsWithId = ChemicalUtil.getChemicalWithCrossReference(query.getChemicalIdentifier().getAccession(),
                     query.getChemicalIdentifier().getShortDescription(), ds.getWID());
 
-            //PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(ds, reactionDepth,);
+            PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(ds, reactionDepth,currencyDecider,mainCompoundDecider);
 
             for (Chemical chemical : chemsWithId) {
-              //  reactions.addAll(rxnGetter.getReactions(chemical));
+              reactions.addAll(rxnGetter.getReactions(chemical));
             }
         } catch (SQLException e) {
         }
