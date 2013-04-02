@@ -33,12 +33,22 @@ public interface DataSetSelector {
 
     /**
      * Given a Taxonomy identifier, this selector retrieves a DataSet according to implementation criteria. 
-     * 
+     * Method {@link #hasDataSetForOrganism(uk.ac.ebi.mdk.domain.identifier.Taxonomy) } needs to be called first,
+     * else a runtime exception is thrown.
      * 
      * @param organismIdentifier
      * @return a DataSet for the defined organism.
      */
     public DataSet getDataSetForOrganism(Taxonomy organismIdentifier);
+    
+    /**
+     * Given a Taxonomy identifier, checks whether the selector can provide a data set. Should be called before
+     * {@link #getDataSetForOrganism(uk.ac.ebi.mdk.domain.identifier.Taxonomy) }.
+     * 
+     * @param organismIdentifier
+     * @return true if a data set can be found.
+     */
+    public boolean hasDataSetForOrganism(Taxonomy organismIdentifier);
 
 
 }

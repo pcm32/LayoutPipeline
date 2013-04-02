@@ -48,12 +48,13 @@ public class BWHConnectivityBasedCurrencyDecider implements CurrencyCompoundDeci
     public BWHConnectivityBasedCurrencyDecider(DataSet dsForCutOff) {
         // use biowh data set to obtain first 5% of connectivities to use as cutoff.
         ret = new HighConnectivityRetriever(dsForCutOff, 20);
+        currencyDs = new HashSet<Chemical>(ret.getHighConnectivity());
     }
 
     public Collection<Chemical> getCurrencyMetabolites(Reaction rxn) {
         Set<Chemical> currency = new HashSet<Chemical>();
         try {
-            currency.addAll(ReactionUtil.getChemicalReactProductCoeffForRxn(rxn.getWID(), rxn.getDataSetWID()).keySet());
+            currency.addAll(ReactionUtil.getChemicalReactProductCoeffForRxn(rxn.getWID(), rxn.getDataSetWID(), true).keySet());
         } catch(SQLException e) {
             LOGGER.error("Problems retrieving participants for reaction WID "+rxn.getWID()+" towards retrieving currencies", e);
         }

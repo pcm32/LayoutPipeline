@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
+import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 
 /**
  * @name NewestUnifiedDataSetSelector
@@ -39,7 +40,7 @@ public class NewestUnifiedDataSetSelector extends AbstractDataSetSelector implem
     
     private static final Logger LOGGER = Logger.getLogger(NewestUnifiedDataSetSelector.class);
     
-    List<DataSet> obtainDataSetAsList() {
+    List<DataSet> obtainDataSetAsList(Taxonomy taxonomyIdent) {
         String query = "SELECT ds.* FROM DataSet ds \n"
                 + "JOIN BioSource bs ON ds.WID = bs.DataSetWID \n"
                 + "JOIN Taxon t ON t.WID = bs.TaxonWID \n"
@@ -51,6 +52,7 @@ public class NewestUnifiedDataSetSelector extends AbstractDataSetSelector implem
         List<DataSet> res = new ArrayList<DataSet>();
         try {
             PreparedStatement ps = bwh.createPreparedStatement(query);
+            ps.setString(1, taxonomyIdent.getAccession());
             res.addAll(TableFactory.loadTables(ps.executeQuery(), TableFactory.DATASET));
         } catch (SQLException e) {
             LOGGER.error("Could not load DataSets", e);

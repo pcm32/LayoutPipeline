@@ -18,6 +18,8 @@
 package uk.ac.ebi.pamela.layoutpipeline.bwh;
 
 import com.sri.biospice.warehouse.schema.DataSet;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +37,11 @@ import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 public abstract class AbstractDataSetSelector {
     Set<Taxonomy> calledForOrg;
     Map<Taxonomy, DataSet> org2DataSet;
+    
+    public AbstractDataSetSelector() {
+        this.calledForOrg = new HashSet<Taxonomy>();
+        this.org2DataSet = new HashMap<Taxonomy, DataSet>();
+    }
 
     public DataSet getDataSetForOrganism(Taxonomy organismIdentifier) {
         if (!calledForOrg.contains(organismIdentifier)) {
@@ -45,11 +52,11 @@ public abstract class AbstractDataSetSelector {
 
     public boolean hasDataSetForOrganism(Taxonomy organismIdentifier) {
         recordVisit(organismIdentifier);
-        List<DataSet> res = obtainDataSetAsList();
+        List<DataSet> res = obtainDataSetAsList(organismIdentifier);
         return recordAnswer(organismIdentifier, res);
     }
 
-    abstract List<DataSet> obtainDataSetAsList();
+    abstract List<DataSet> obtainDataSetAsList(Taxonomy organismIdentifier);
 
     boolean recordAnswer(Taxonomy organismIdentifier, List<DataSet> res) {
         if (res.size() > 0) {
