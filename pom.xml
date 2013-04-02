@@ -90,11 +90,11 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
+<!--        <repository>
             <id>biobabel</id>
             <name>biobabel</name>
             <url>http://www.ebi.ac.uk/~biobabel/maven2_repo</url>
-        </repository>
+        </repository>-->
 
         <repository>
             <id>ebi-repo-snapshots</id>
