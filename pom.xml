@@ -106,5 +106,17 @@
                 <!-- weekly -->
             </snapshots>
         </repository>
+        
+        <repository>
+            <id>biobabel</id>
+            <name>biobabel</name>
+            <url>http://www.ebi.ac.uk/~biobabel/maven2_repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:10080</updatePolicy>
+                <!-- weekly -->
+            </snapshots>
+        </repository>
+
     </repositories>
 </project>

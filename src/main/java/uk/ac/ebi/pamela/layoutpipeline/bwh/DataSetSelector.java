@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package uk.ac.ebi.pamela.layoutpipeline.pamela;
+package uk.ac.ebi.pamela.layoutpipeline.bwh;
 
 import com.sri.biospice.warehouse.schema.DataSet;
 import uk.ac.ebi.mdk.domain.identifier.Taxonomy;

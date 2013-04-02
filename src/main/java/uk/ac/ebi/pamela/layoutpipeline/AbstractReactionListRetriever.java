@@ -34,7 +34,7 @@ import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
  */
 public abstract class AbstractReactionListRetriever {
 
-    protected abstract Iterable<MetabolicReaction> getReactions(Query query);
+    abstract Iterable<MetabolicReaction> getReactions(Query query);
 
     public List<Reconstruction> getReactionsAsReconstructions(Query query) {
         Reconstruction rec = new ReconstructionImpl();
