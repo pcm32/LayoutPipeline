@@ -77,22 +77,24 @@ public class RheaRecursiveReactionGetterTest {
         (4-coumaroyl)acetyl-CoA + 4-coumaroyl-CoA + H2O <?> bisdemethoxycurcumin + CO2 + 2 CoA
          2 4-coumaroyl-CoA + H2O + H+ + malonyl-CoA <?> bisdemethoxycurcumin + 2 CO2 + 3 CoA
 
-        And 4 compounds should be selected for the next itereation (excluding the already visited one: bisdemethoxycurcumin.
+        And 3 compounds should be selected for the next itereation (excluding the already visited one: bisdemethoxycurcumin.
 
         Second round should be for:
-        (4-coumaroyl)acetyl-CoA
-        4-coumaroyl-CoA
-        2 4-coumaroyl-CoA
-        malonyl-CoA
+        (4-coumaroyl)acetyl-CoA     CHEBI:71211     --> 2 reactions -> 1
+        4-coumaroyl-CoA             CHEBI:57355     --> 14 reactions -> 13
+        malonyl-CoA                 CHEBI:57384     --> 44 reactions -> 43
+                                                    ________________________
+                                                     Total              57
 
 
+        there must be 2 + 57 -> 59
+
+         **/
+
+        // Reactions must be 59....
+        assertEquals("Number of recursive returned reactions test for " + CHEBIID_TEST, 59, reactions.size());
 
 
-        // Reactions must be ?....
-        assertEquals("Number of recursive returned reactions test for " + CHEBIID_TEST, 2, reactions.size());
-
-
-        **/
 
 
     }

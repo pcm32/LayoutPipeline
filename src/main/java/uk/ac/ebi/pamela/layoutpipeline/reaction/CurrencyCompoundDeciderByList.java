@@ -37,8 +37,8 @@ public class CurrencyCompoundDeciderByList implements CurrencyCompoundDecider<Co
         ArrayList<Compound> currenciesFound = new ArrayList<Compound>();
 
         // Join product and reactant sides.
-        Collection<ReactionParticipant> participants = new ArrayList (rxn.getProductsSide());
-        participants.addAll(rxn.getReactantsSide());
+        Collection<ReactionParticipant> participants = new ArrayList (rxn.getLeftSide());
+        participants.addAll(rxn.getRightSide());
 
         // For each participants...
         for (ReactionParticipant compound: participants){
