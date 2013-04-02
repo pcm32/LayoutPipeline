@@ -40,7 +40,7 @@ public class BWHDummyMainCompDecider implements MainCompoundDecider<Chemical, Re
 
     public Collection<Chemical> getMainCompounds(Reaction rxn, Chemical compound) {
         try {
-            return ReactionUtil.getChemicalReactProductCoeffForRxn(rxn.getWID(), rxn.getDataSetWID()).keySet();
+            return ReactionUtil.getChemicalReactProductCoeffForRxn(rxn.getWID(), rxn.getDataSetWID(), Boolean.TRUE).keySet();
         } catch(SQLException e) {
             LOGGER.error("Problems retrieving participants for reaction WID "+rxn.getWID(), e);
             return new ArrayList<Chemical>();
