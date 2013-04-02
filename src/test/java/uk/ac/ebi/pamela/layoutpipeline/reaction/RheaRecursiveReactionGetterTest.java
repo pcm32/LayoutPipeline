@@ -58,7 +58,44 @@ public class RheaRecursiveReactionGetterTest {
 
 
     @Test
-    public void testGetReactionsRecursivenes() throws Exception {
+    public void testGetReactionsRecursivenessSimple() throws Exception {
+
+
+        // These chebiids are for: H2O, H, CO2 and  CoA, plus 4-coumaroyl-CoA and malonyl-CoA (to simplify the output)
+        CurrencyCompoundDeciderByList ccdl = new CurrencyCompoundDeciderByList(Arrays.asList(new String[]{"CHEBI:15377", "CHEBI:15378", "CHEBI:16526", "CHEBI:57287", "CHEBI:57355", "CHEBI:57384" }));
+        MainCompoundDecider mcdr = new MainCompoundDeciderRhea();
+
+        RheaRecursiveReactionGetter rheaReactionRetriever = new RheaRecursiveReactionGetter(1,ccdl,mcdr);
+
+        Compound compound = rheaReactionRetriever.getRheaCompound(CHEBIID_TEST);
+
+        Collection<MetabolicReaction> reactions = rheaReactionRetriever.getReactions(compound);
+
+        /**
+        First iteration query for bisdemethoxycurcumin, we should get 2 reactions:
+
+        RHEA:35119 --> (4-coumaroyl)acetyl-CoA + 4-coumaroyl-CoA + H2O <?> bisdemethoxycurcumin + CO2 + 2 CoA   -1050050211
+        RHEA:34803 -->  2 4-coumaroyl-CoA + H2O + H+ + malonyl-CoA <?> bisdemethoxycurcumin + 2 CO2 + 3 CoA
+
+        And 1 compounds should be selected for the next iteration (excluding the already visited one: bisdemethoxycurcumin).
+
+        Second round should be for:
+        (4-coumaroyl)acetyl-CoA     CHEBI:71211     --> 2 reactions -> 1
+                                                   ________________________
+                                                     Total              3
+
+
+        there must be 2 + 1 -> 3
+
+         **/
+
+        // Reactions must be 58....
+        assertEquals("Number of recursive returned reactions test for " + CHEBIID_TEST, 3, reactions.size());
+
+    }
+
+    @Test
+    public void testGetReactionsRecursivenessComplex() throws Exception {
 
 
         // These chebiids are for: H2O, H, CO2 and  CoA
@@ -72,32 +109,31 @@ public class RheaRecursiveReactionGetterTest {
         Collection<MetabolicReaction> reactions = rheaReactionRetriever.getReactions(compound);
 
         /**
-        First iteration query for bisdemethoxycurcumin, we should get 2 reactions:
+         First iteration query for bisdemethoxycurcumin (CHEBI:71045) , we should get 2 reactions:
 
-        (4-coumaroyl)acetyl-CoA + 4-coumaroyl-CoA + H2O <?> bisdemethoxycurcumin + CO2 + 2 CoA
-         2 4-coumaroyl-CoA + H2O + H+ + malonyl-CoA <?> bisdemethoxycurcumin + 2 CO2 + 3 CoA
+         RHEA:35119 --> (4-coumaroyl)acetyl-CoA + 4-coumaroyl-CoA + H2O <?> bisdemethoxycurcumin + CO2 + 2 CoA   -1050050211
+         RHEA:34803 -->  2 4-coumaroyl-CoA + H2O + H+ + malonyl-CoA <?> bisdemethoxycurcumin + 2 CO2 + 3 CoA
 
-        And 3 compounds should be selected for the next itereation (excluding the already visited one: bisdemethoxycurcumin.
+         And 3 compounds should be selected for the next iteration (excluding the already visited one: bisdemethoxycurcumin.
 
-        Second round should be for:
-        (4-coumaroyl)acetyl-CoA     CHEBI:71211     --> 2 reactions -> 1
-        4-coumaroyl-CoA             CHEBI:57355     --> 14 reactions -> 13
-        malonyl-CoA                 CHEBI:57384     --> 44 reactions -> 43
-                                                    ________________________
-                                                     Total              57
+         Second round should be for:
+         (4-coumaroyl)acetyl-CoA     CHEBI:71211     --> 2 reactions -> 1
+         malonyl-CoA                 CHEBI:57384     --> 44 reactions -> 42 (RHEA:34803 from first iteration, and RHEA:35115 from previous line)
+         4-coumaroyl-CoA             CHEBI:57355     --> 14 reactions -> 7 (5 shared with CHEBI:57384 and the 2 initial (appears twice))
+
+                                                        ________________________
+                                                        Total            50
 
 
-        there must be 2 + 57 -> 59
+         there must be 2 + 50 -> 52
 
          **/
 
-        // Reactions must be 59....
-        assertEquals("Number of recursive returned reactions test for " + CHEBIID_TEST, 59, reactions.size());
+        // Reactions must be 52....
+        assertEquals("Number of returned reactions, complex test, for  " + CHEBIID_TEST, 52, reactions.size());
 
 
 
 
     }
-
-
 }

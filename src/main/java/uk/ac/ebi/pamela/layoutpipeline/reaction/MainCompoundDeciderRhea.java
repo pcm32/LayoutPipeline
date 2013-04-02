@@ -13,12 +13,15 @@ import java.util.HashSet;
  * Date: 28/03/2013
  * Time: 14:21
  */
-public class MainCompoundDeciderRhea implements MainCompoundDecider<Compound, Reaction> {
+public class MainCompoundDeciderRhea implements MainCompoundDecider<Compound, RheaReactionWrapper> {
 
 
-    public Collection<Compound> getMainCompounds(Reaction rxn, Compound compound) {
+    public Collection<Compound> getMainCompounds(RheaReactionWrapper rheaWrapper, Compound compound) {
+
+        Reaction rxn = rheaWrapper.getRheaReaction();
 
         Collection<ReactionParticipant> allParticipants = new ArrayList<ReactionParticipant>(rxn.getLeftSide());
+
 
         allParticipants.addAll(rxn.getRightSide());
 

@@ -12,7 +12,7 @@ import java.util.Collection;
  * Date: 25/03/2013
  * Time: 13:26
  */
-public class CurrencyCompoundDeciderByList implements CurrencyCompoundDecider<Compound,Reaction> {
+public class CurrencyCompoundDeciderByList implements CurrencyCompoundDecider<Compound,RheaReactionWrapper> {
 
 
     Collection<String> currencylist;
@@ -25,13 +25,16 @@ public class CurrencyCompoundDeciderByList implements CurrencyCompoundDecider<Co
     /**
      * look inside the reactions compound if there is any currency metabolite (currency metabolites are stored in list)
      * So, no clever currency decider, if it's in the list...it's a currency metabolite.
-     * @param rxn
+     * @param rheaWrapper
      * @return
      */
-    public Collection<Compound> getCurrencyMetabolites(Reaction rxn) {
+    public Collection<Compound> getCurrencyMetabolites(RheaReactionWrapper rheaWrapper) {
+
 
         // If there is no currency list ...there will not be any currency metabolite
         if (currencylist == null || currencylist.size()==0) return null;
+
+        Reaction rxn = rheaWrapper.getRheaReaction();
 
         // Currencies found array
         ArrayList<Compound> currenciesFound = new ArrayList<Compound>();

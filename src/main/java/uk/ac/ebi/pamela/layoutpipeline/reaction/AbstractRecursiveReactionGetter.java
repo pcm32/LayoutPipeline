@@ -64,7 +64,7 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     private Collection<MetabolicReaction> getReactions(C chem, Integer depth) throws SQLException {
         Collection<MetabolicReaction> metabRxns = new ArrayList<MetabolicReaction>();
         Collection<R> rxns = getReactionsForChemical(chem);
-        Collection<C> chemsToVisit = new ArrayList<C>();
+        Collection<C> chemsToVisit = new HashSet<C>();
 
         visitedChemicals.add(chem);
 

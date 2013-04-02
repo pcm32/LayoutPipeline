@@ -30,13 +30,13 @@ import java.util.Set;
  * Time: 17:05
  * To change this template use File | Settings | File Templates.
  */
-public class RheaRecursiveReactionGetter extends AbstractRecursiveReactionGetter<Compound,Reaction> {
+public class RheaRecursiveReactionGetter extends AbstractRecursiveReactionGetter<Compound,RheaReactionWrapper> {
 
 private static final Logger LOGGER = Logger.getLogger(RheaRecursiveReactionGetter.class.getName());
 private Connection rheaConnection = null;
 
 
-    public RheaRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<Compound, Reaction> currencyDecider, MainCompoundDecider<Compound, Reaction> mainCompDecider) {
+    public RheaRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<Compound, RheaReactionWrapper> currencyDecider, MainCompoundDecider<Compound, RheaReactionWrapper> mainCompDecider) {
         super(depth,currencyDecider,mainCompDecider);
 
         connectToRhea();
@@ -70,12 +70,12 @@ private Connection rheaConnection = null;
 
     }
     @Override
-    public Collection<Reaction> getReactionsForChemical(Compound chemical) {
+    public Collection<RheaReactionWrapper> getReactionsForChemical(Compound chemical) {
 
         return getReactionsForChemical(chemical.getAccession());
 
     }
-    public Collection<Reaction> getReactionsForChemical(String chemical) {
+    public Collection<RheaReactionWrapper> getReactionsForChemical(String chemical) {
 
         try {
 
@@ -87,6 +87,9 @@ private Connection rheaConnection = null;
             so.setDirection(rheaDir);
             so.setStatus("OK");
 
+            LOGGER.info("Loading reactions for " + chemical);
+
+
             // Instantiate the compound db reader...
             RheaCompoundDbReader rheaCompoundDbReader = new RheaCompoundDbReader(rheaConnection);
 
@@ -96,7 +99,7 @@ private Connection rheaConnection = null;
             // Get the reactions for the search option
             Set<Reaction> reactionsId = rheaReader.findByCompoundAccession(chemical, so);
 
-            Set<Reaction> reactions = new HashSet<Reaction>();
+            Set<RheaReactionWrapper> reactions = new HashSet<RheaReactionWrapper>();
 
             for (Reaction reaction:reactionsId){
 
@@ -107,7 +110,9 @@ private Connection rheaConnection = null;
 
                 Reaction populatedReaction =rheaReader.findByReactionId(rheaId);
 
-                reactions.add(populatedReaction);
+                RheaReactionWrapper rheaWrapper = new RheaReactionWrapper(populatedReaction);
+
+                reactions.add(rheaWrapper);
 
             }
 
@@ -123,10 +128,12 @@ private Connection rheaConnection = null;
 
     }
 
-    MetabolicReaction convertReaction(Reaction rhea){
+    MetabolicReaction convertReaction(RheaReactionWrapper rheawrapper){
 
         // Instantiate a metabolic reaction...
         MetabolicReaction mr = new MetabolicReactionImpl();
+
+        Reaction rhea = rheawrapper.getRheaReaction();
 
         // Populate with Rhea reaction values
         mr.setDirection(Direction.UNKNOWN);
