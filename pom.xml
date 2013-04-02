@@ -45,7 +45,7 @@
     <dependency>
       <groupId>uk.ac.ebi.mdk</groupId>
       <artifactId>mdk-io-xml-parsers</artifactId>
-      <version>1.3.2-SNAPSHOT</version>
+      <version>${mdk.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
@@ -58,14 +58,19 @@
         <artifactId>rhea-mapper</artifactId>
         <version>3.7.1</version>
     </dependency>
-     
-        <dependency>
-            <groupId>uk.ac.ebi.mdk</groupId>
-            <artifactId>warehouse-loader</artifactId>
-            <version>1.3.5-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
+    <dependency>
+        <groupId>uk.ac.ebi.mdk</groupId>
+        <artifactId>warehouse-loader</artifactId>
+        <version>1.3.5-SNAPSHOT</version>
+        <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>oracle</groupId>
+      <artifactId>ojdbc6</artifactId>
+      <version>11.2.0.2</version>
+    </dependency>
+
+  </dependencies>
   
   <repositories>
        <repository>
@@ -85,6 +90,11 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+<!--        <repository>
+            <id>biobabel</id>
+            <name>biobabel</name>
+            <url>http://www.ebi.ac.uk/~biobabel/maven2_repo</url>
+        </repository>-->
 
         <repository>
             <id>ebi-repo-snapshots</id>

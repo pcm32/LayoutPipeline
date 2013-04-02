@@ -26,11 +26,18 @@ import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
  * @version $Rev$ : Last Changed $Date$
  * @author  Pablo Moreno <pablacious at users.sf.net>
  * @author  $Author$ (this version)
- * @brief   ...class description...
+ * @brief   defines functionality for a data set selector.
  *
  */
 public interface DataSetSelector {
 
+    /**
+     * Given a Taxonomy identifier, this selector retrieves a DataSet according to implementation criteria. 
+     * 
+     * 
+     * @param organismIdentifier
+     * @return a DataSet for the defined organism.
+     */
     public DataSet getDataSetForOrganism(Taxonomy organismIdentifier);
 
 
