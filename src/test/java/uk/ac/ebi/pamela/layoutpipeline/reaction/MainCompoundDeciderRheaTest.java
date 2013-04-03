@@ -26,11 +26,13 @@ public class MainCompoundDeciderRheaTest {
 
         Compound comp = rrg.getRheaCompound(CHEBIID_TEST);
 
-        Collection<Reaction> reactions = rrg.getReactionsForChemical(comp);
+        Collection<RheaReactionWrapper> reactions = rrg.getReactionsForChemical(comp);
 
-        Reaction reaction = reactions.iterator().next();
+        RheaReactionWrapper wrappedReaction = reactions.iterator().next();
 
-        Collection<Compound> compounds = mcdRhea.getMainCompounds(reaction,comp);
+        Collection<Compound> compounds = mcdRhea.getMainCompounds(wrappedReaction,comp);
+
+        Reaction reaction = wrappedReaction.getRheaReaction();
 
         // This should return all the compounds
         assertEquals("Same number of compounds", reaction.getLeftSide().size()+ reaction.getRightSide().size() , compounds.size());
