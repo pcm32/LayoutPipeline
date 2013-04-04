@@ -55,6 +55,9 @@ public class SBWAutoLayouterAlgorithmOptions {
 //        this.ps = ps;
 //        this.svg = svg;
 //    }
+    
+    public SBWAutoLayouterAlgorithmOptions() {
+    }
 
     public SBWAutoLayouterAlgorithmOptions(String fileToConvert, String directoryToSaveTo, String degreeOfAutoAliasing, int width, int height, double gravityFactor, double edgeLenght, boolean noSbml, boolean grid, boolean magnetism, boolean boundary, boolean emptySet, boolean emptySets, boolean removeExisting, boolean sourceSink) {
 

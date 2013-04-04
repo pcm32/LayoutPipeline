@@ -182,11 +182,15 @@ public class SBWAutoLayouterAlgorithm implements LayoutAlgorithm {
     /**
      * default constructor
      */
-    public SBWAutoLayouterAlgorithm(String pathToSaveLayoutEXE, SBWAutoLayouterAlgorithmOptions options){
+    public SBWAutoLayouterAlgorithm(String pathToExec, SBWAutoLayouterAlgorithmOptions options){
 
-        this.pathToSaveLayoutEXE = pathToSaveLayoutEXE;
+        this.pathToSaveLayoutEXE = pathToExec;
         this.options = options;
 
+    }
+    
+    public SBWAutoLayouterAlgorithm(String pathToExec) {
+        this(pathToExec, new SBWAutoLayouterAlgorithmOptions());
     }
 
     public static boolean testSetup(String pathToLayouter){
