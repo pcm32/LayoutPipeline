@@ -53,8 +53,7 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
     private CurrencyCompoundDecider<Chemical, Reaction> currencyDecider;
     private MainCompoundDecider<Chemical, Reaction> mainCompoundDecider;
 
-    public PAMELAReactionListRetriever(DataSetSelector dsSel, Taxonomy organism, Integer reactionDepth) throws IOException, SQLException {
-        BiowhPooledConnection bwhc = new BiowhPooledConnection();
+    public PAMELAReactionListRetriever(DataSetSelector dsSel, Taxonomy organism, Integer reactionDepth) throws IOException, SQLException {        
         this.dsSel = dsSel;
         this.reactionDepth = reactionDepth;
         if (this.dsSel.hasDataSetForOrganism(organism)) {
