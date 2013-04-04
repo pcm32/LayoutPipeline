@@ -23,6 +23,7 @@ import com.sri.biospice.warehouse.schema.object.Reaction;
 import java.sql.SQLException;
 import java.util.Collection;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.metabolomes.biowh.BioChemicalReactionSetProviderFactory;
 import uk.ac.ebi.metabolomes.biowh.BiochemicalReactionSetProvider;
 import uk.ac.ebi.warehouse.util.ReactionUtil;
@@ -40,9 +41,10 @@ public class PAMELARecursiveReactionGetter extends AbstractRecursiveReactionGett
     
     private BiochemicalReactionSetProvider provider;
     
-    public PAMELARecursiveReactionGetter(DataSet ds, Integer depth, CurrencyCompoundDecider<Chemical,Reaction> currencyDecider, MainCompoundDecider<Chemical,Reaction> mainCompDecider) {
+    public PAMELARecursiveReactionGetter(DataSet ds, Taxonomy orgIdentifier,Integer depth, CurrencyCompoundDecider<Chemical,Reaction> currencyDecider, MainCompoundDecider<Chemical,Reaction> mainCompDecider) {
         super(depth,currencyDecider,mainCompDecider);
         this.provider = BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
+        this.provider.setSpecieForProvider(orgIdentifier.getTaxon());
     }
 
     @Override
