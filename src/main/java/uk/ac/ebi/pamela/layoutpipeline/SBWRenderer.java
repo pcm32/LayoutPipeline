@@ -150,6 +150,11 @@ public class SBWRenderer implements LayoutRenderer {
 
     }
 
+    public SBWRenderer(String pathToRendererEXE) {
+        this(pathToRendererEXE, new SBWRendererOptions());
+    }
+    
+    
     /**
      * default constructor
      */
@@ -175,7 +180,7 @@ public class SBWRenderer implements LayoutRenderer {
         return testcommand("mono" , "--version");
     }
 
-    public static boolean testLayouter(String pathToRenderer){
+    public static boolean testLayouter(String pathToRenderer){        
         return testcommand("mono" , pathToRenderer);
     }
 

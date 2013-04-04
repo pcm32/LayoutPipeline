@@ -23,6 +23,9 @@ public class SBWRendererOptions {
     private double scaleFactor, xDimension, yDimension;
 
 
+    public SBWRendererOptions() {
+    }
+    
     public SBWRendererOptions(String fileToConvert, String directoryToSaveTo, double scaleFactor) {
 
         this.fileToConvert = fileToConvert;
