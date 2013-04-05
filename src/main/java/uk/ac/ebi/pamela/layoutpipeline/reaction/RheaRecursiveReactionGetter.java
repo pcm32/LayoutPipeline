@@ -4,12 +4,14 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.mdk.domain.entity.Metabolite;
 import uk.ac.ebi.mdk.domain.entity.MetaboliteImpl;
 import uk.ac.ebi.mdk.domain.entity.reaction.*;
-import uk.ac.ebi.mdk.domain.identifier.CHEMBLIdentifier;
+import uk.ac.ebi.mdk.domain.entity.reaction.Direction;
 import uk.ac.ebi.mdk.domain.identifier.ChEBIIdentifier;
+import uk.ac.ebi.mdk.domain.identifier.SwissProtIdentifier;
+import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
+import uk.ac.ebi.mdk.domain.identifier.UniProtIdentifier;
+import uk.ac.ebi.mdk.service.query.orthology.UniProtECNumber2OrganismProteinService;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
-import uk.ac.ebi.rhea.domain.Compound;
-import uk.ac.ebi.rhea.domain.Reaction;
-import uk.ac.ebi.rhea.domain.ReactionParticipant;
+import uk.ac.ebi.rhea.domain.*;
 import uk.ac.ebi.rhea.mapper.MapperException;
 import uk.ac.ebi.rhea.mapper.SearchOptions;
 import uk.ac.ebi.rhea.mapper.SearchSwitch;
@@ -18,10 +20,7 @@ import uk.ac.ebi.rhea.mapper.db.RheaDbReader;
 
 import java.io.IOException;
 import java.sql.*;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -35,10 +34,12 @@ public class RheaRecursiveReactionGetter extends AbstractRecursiveReactionGetter
 private static final Logger LOGGER = Logger.getLogger(RheaRecursiveReactionGetter.class.getName());
 private Connection rheaConnection = null;
 
+private Taxonomy specie;
+private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtECNumber2OrganismProteinService();
 
-    public RheaRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<Compound, RheaReactionWrapper> currencyDecider, MainCompoundDecider<Compound, RheaReactionWrapper> mainCompDecider) {
+    public RheaRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<Compound, RheaReactionWrapper> currencyDecider, MainCompoundDecider<Compound, RheaReactionWrapper> mainCompDecider, Taxonomy specie) {
         super(depth,currencyDecider,mainCompDecider);
-
+        this.specie = specie;
         connectToRhea();
     }
 
@@ -96,7 +97,7 @@ private Connection rheaConnection = null;
             // Instantiate the rhea db reader  (for reactions)
             RheaDbReader rheaReader = new RheaDbReader(rheaCompoundDbReader);
 
-            // Get the reactions for the search option
+            // Get the reactions for the search option...this returns a lightweight reactions...we need to ask rhea to full populate it
             Set<Reaction> reactionsId = rheaReader.findByCompoundAccession(chemical, so);
 
             Set<RheaReactionWrapper> reactions = new HashSet<RheaReactionWrapper>();
@@ -105,14 +106,31 @@ private Connection rheaConnection = null;
 
                 Long rheaId = reaction.getId();
 
+                // If we already have the reaction in the visited list
+                RheaReactionWrapper rheaWrapper = new RheaReactionWrapper(reaction);
 
-                LOGGER.info("Loading reaction " + rheaId);
+                if (isReactionVisited(rheaWrapper)){
 
-                Reaction populatedReaction =rheaReader.findByReactionId(rheaId);
+                    LOGGER.info("Avoiding load of reaction " + rheaId + ": already visited.");
+                    continue;
 
-                RheaReactionWrapper rheaWrapper = new RheaReactionWrapper(populatedReaction);
+                } else {
 
-                reactions.add(rheaWrapper);
+                    LOGGER.info("Loading reaction " + rheaId);
+
+                    Reaction populatedReaction =rheaReader.findByReactionId(rheaId);
+
+                    rheaWrapper = new RheaReactionWrapper(populatedReaction);
+
+                    if (checkSpecieForReaction(populatedReaction)){
+
+                        reactions.add(rheaWrapper);
+                    } else {
+
+                        addVisitedReaction(rheaWrapper);
+                    }
+
+                }
 
             }
 
@@ -125,6 +143,59 @@ private Connection rheaConnection = null;
         }
 
         return null;
+
+    }
+
+    protected boolean checkSpecieForReaction(Reaction reaction){
+
+        // If there's no specie information we will return the reaction
+        if ((specie == null) || specie.getAccession().equals("")) return true;
+
+        // Get the list of FamilyXRefs...
+        Map<uk.ac.ebi.rhea.domain.Direction, Set<XRef>> familyXref = reaction.getFamilyXrefs();
+
+        // If there is no Xref...we can't retrieve species information...return null
+        if (familyXref == null) return false;
+
+        // go through the map
+        for (Map.Entry<uk.ac.ebi.rhea.domain.Direction, Set<XRef>> entry:familyXref.entrySet()){
+
+            // Ignore undefined direction
+            if (entry.getKey().equals(uk.ac.ebi.rhea.domain.Direction.UN)) continue;
+
+            // Go through the set
+            for (XRef xRef:entry.getValue()){
+
+                // Pick the uniprot ids...
+                if (xRef.getDatabase() == Database.UNIPROT){
+
+                    LOGGER.debug("UniprotId  " + xRef.getName() + " found for RHEA:" + reaction.getId());
+
+                    if (hasUniprotIdTheSpecie(xRef.getName())){
+                        return true;
+                    }
+                }
+            }
+
+        }
+
+        return false;
+    }
+
+    protected boolean hasUniprotIdTheSpecie (String uniprotId){
+
+
+        UniProtIdentifier ident = new SwissProtIdentifier(uniprotId);
+        Collection<Taxonomy> orgs = uniProtSpecieServ.getOrganismForProteinIdentifier(ident);
+
+        Taxonomy orgIdent=null;
+
+        // I will never be null
+        if(!orgs.isEmpty())
+            orgIdent = orgs.iterator().next();
+
+        // Until we have the index return true
+        return specie.equals(orgIdent);
 
     }
 

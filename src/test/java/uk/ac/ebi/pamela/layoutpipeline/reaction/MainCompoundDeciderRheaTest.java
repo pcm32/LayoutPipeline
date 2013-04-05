@@ -22,7 +22,7 @@ public class MainCompoundDeciderRheaTest {
 
         MainCompoundDeciderRhea mcdRhea = new MainCompoundDeciderRhea();
 
-        RheaRecursiveReactionGetter rrg = new RheaRecursiveReactionGetter(0,null,null);
+        RheaRecursiveReactionGetter rrg = new RheaRecursiveReactionGetter(0,null,null,null);
 
         Compound comp = rrg.getRheaCompound(CHEBIID_TEST);
 
