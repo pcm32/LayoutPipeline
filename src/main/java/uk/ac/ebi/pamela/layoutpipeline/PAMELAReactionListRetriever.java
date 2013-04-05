@@ -50,15 +50,17 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
     private DataSet ds;
     private DataSetSelector dsSel;
     private Integer reactionDepth;
-    private CurrencyCompoundDecider<Chemical,Reaction> currencyDecider;
-    private MainCompoundDecider<Chemical,Reaction> mainCompoundDecider;
+    private CurrencyCompoundDecider<Chemical, Reaction> currencyDecider;
+    private MainCompoundDecider<Chemical, Reaction> mainCompoundDecider;
 
-    public PAMELAReactionListRetriever(DataSetSelector dsSel, Taxonomy organism) throws IOException, SQLException {
-        BiowhPooledConnection bwhc = new BiowhPooledConnection();        
+    public PAMELAReactionListRetriever(DataSetSelector dsSel, Taxonomy organism, Integer reactionDepth) throws IOException, SQLException {        
         this.dsSel = dsSel;
-        this.ds = dsSel.getDataSetForOrganism(organism);
-        this.currencyDecider = new BWHConnectivityBasedCurrencyDecider(ds);
-        this.mainCompoundDecider = new BWHDummyMainCompDecider();
+        this.reactionDepth = reactionDepth;
+        if (this.dsSel.hasDataSetForOrganism(organism)) {
+            this.ds = dsSel.getDataSetForOrganism(organism);
+            this.currencyDecider = new BWHConnectivityBasedCurrencyDecider(ds);
+            this.mainCompoundDecider = new BWHDummyMainCompDecider();
+        }
     }
 
     Iterable<MetabolicReaction> getReactions(Query query) {
@@ -66,21 +68,22 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
         List<MetabolicReaction> reactions = new ArrayList<MetabolicReaction>();
 
         // Search for chemical identifier in data set
+        if (ds != null) {
+            BiochemicalReactionSetProvider provider =
+                    BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
 
-        BiochemicalReactionSetProvider provider =
-                BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
+            // Get small molecule that has the provided Cross reference.
+            try {
+                List<Chemical> chemsWithId = ChemicalUtil.getChemicalWithCrossReference(query.getChemicalIdentifier().getAccession(),
+                        query.getChemicalIdentifier().getShortDescription(), ds.getWID());
 
-        // Get small molecule that has the provided Cross reference.
-        try {
-            List<Chemical> chemsWithId = ChemicalUtil.getChemicalWithCrossReference(query.getChemicalIdentifier().getAccession(),
-                    query.getChemicalIdentifier().getShortDescription(), ds.getWID());
+                PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(ds, query.getOrganismIdentifier(), reactionDepth, currencyDecider, mainCompoundDecider);
 
-            PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(ds, reactionDepth,currencyDecider,mainCompoundDecider);
-
-            for (Chemical chemical : chemsWithId) {
-              reactions.addAll(rxnGetter.getReactions(chemical));
+                for (Chemical chemical : chemsWithId) {
+                    reactions.addAll(rxnGetter.getReactions(chemical));
+                }
+            } catch (SQLException e) {
             }
-        } catch (SQLException e) {
         }
 
         return reactions;

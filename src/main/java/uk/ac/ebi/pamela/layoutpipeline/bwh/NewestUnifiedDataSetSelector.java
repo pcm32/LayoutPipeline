@@ -21,6 +21,7 @@ import com.sri.biospice.warehouse.database.Warehouse;
 import com.sri.biospice.warehouse.schema.DataSet;
 import com.sri.biospice.warehouse.schema.TableFactory;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,11 @@ public class NewestUnifiedDataSetSelector extends AbstractDataSetSelector implem
         try {
             PreparedStatement ps = bwh.createPreparedStatement(query);
             ps.setString(1, taxonomyIdent.getAccession());
-            res.addAll(TableFactory.loadTables(ps.executeQuery(), TableFactory.DATASET));
+            ResultSet rs = ps.executeQuery();
+            if(rs.first()) {
+                DataSet ds = new DataSet(rs.getLong("WID"));
+                res.add(ds);
+            }
         } catch (SQLException e) {
             LOGGER.error("Could not load DataSets", e);
         }
