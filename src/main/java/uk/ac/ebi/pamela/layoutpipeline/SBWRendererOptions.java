@@ -21,7 +21,15 @@ public class SBWRendererOptions {
 
     private String fileToConvert, directoryToSaveTo;
     private double scaleFactor, xDimension, yDimension;
+    private Format outputFormat = Format.png;
 
+    public void setOutputFormat(Format format) {
+        this.outputFormat = format;
+    }
+
+    public enum Format {
+        svg,png;
+    }
 
     public SBWRendererOptions() {
     }
@@ -42,7 +50,7 @@ public class SBWRendererOptions {
     }
 
     public String getDirectoryToSaveTo() {
-        return directoryToSaveTo;
+        return directoryToSaveTo+"."+this.outputFormat.toString();
     }
 
     public void setDirectoryToSaveTo(String directoryToSaveTo) {
@@ -78,7 +86,7 @@ public class SBWRendererOptions {
         String result = "";
 
         result = result + option2String("--file", fileToConvert);
-        result = result + option2String("--out", directoryToSaveTo);
+        result = result + option2String("--out", getDirectoryToSaveTo());
         if (scaleFactor!=0) result = result + option2String("--scale", scaleFactor);
         if (xDimension != 0) result = result + option2String("--dimensions", xDimension + " " + yDimension);
         return result;
