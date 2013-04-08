@@ -171,7 +171,7 @@ private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtEC
 
                     LOGGER.debug("UniprotId  " + xRef.getName() + " found for RHEA:" + reaction.getId());
 
-                    if (hasUniprotIdTheSpecie(xRef.getName())){
+                    if (hasUniprotIdTheSpecie(xRef.getAccessionNumber())){
                         return true;
                     }
                 }
@@ -184,18 +184,19 @@ private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtEC
 
     protected boolean hasUniprotIdTheSpecie (String uniprotId){
 
+        return true;
 
-        UniProtIdentifier ident = new SwissProtIdentifier(uniprotId);
-        Collection<Taxonomy> orgs = uniProtSpecieServ.getOrganismForProteinIdentifier(ident);
-
-        Taxonomy orgIdent=null;
-
-        // I will never be null
-        if(!orgs.isEmpty())
-            orgIdent = orgs.iterator().next();
-
-        // Until we have the index return true
-        return specie.equals(orgIdent);
+//        UniProtIdentifier ident = new SwissProtIdentifier(uniprotId);
+//        Collection<Taxonomy> orgs = uniProtSpecieServ.getOrganismForProteinIdentifier(ident);
+//
+//        Taxonomy orgIdent=null;
+//
+//        // I will never be null
+//        if(!orgs.isEmpty())
+//            orgIdent = orgs.iterator().next();
+//
+//        // Until we have the index return true
+//        return specie.equals(orgIdent);
 
     }
 
@@ -241,7 +242,7 @@ private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtEC
         if (comp != null){
 
             // Are all rhea compounds chebiId..?
-            Metabolite metabolite = new MetaboliteImpl(new ChEBIIdentifier(comp.getAccession()),"",comp.getName());
+            Metabolite metabolite = new MetaboliteImpl(new ChEBIIdentifier(comp.getAccession()),"",comp.getAccession());
 
             MetabolicParticipant met = new MetabolicParticipantImplementation(metabolite, Double.valueOf(rp.getCoefficient().getValue()));
 
