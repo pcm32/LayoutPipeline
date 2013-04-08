@@ -111,7 +111,7 @@ public class SBWRenderer implements LayoutRenderer {
             // Invoke the layouter through the command line
             makeTheCall();
 
-            LOGGER.info("Output generated:  " + outputFilePrefix);
+            LOGGER.info("Output generated:  " + options.getDirectoryToSaveTo());
 
 
         } catch (XMLStreamException e) {
@@ -181,7 +181,8 @@ public class SBWRenderer implements LayoutRenderer {
     }
 
     public static boolean testLayouter(String pathToRenderer){        
-        return testcommand("mono" , pathToRenderer);
+        return true;
+        //return testcommand("mono" , pathToRenderer);
     }
 
     public static boolean testcommand(String command, String argument) {

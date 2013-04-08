@@ -25,7 +25,9 @@ import uk.ac.ebi.metabolomes.biowh.DataSetProvider;
 import uk.ac.ebi.pamela.layoutpipeline.PAMELAReactionListRetriever;
 import uk.ac.ebi.pamela.layoutpipeline.Query;
 import uk.ac.ebi.pamela.layoutpipeline.SBWAutoLayouterAlgorithm;
+import uk.ac.ebi.pamela.layoutpipeline.SBWAutoLayouterAlgorithmOptions;
 import uk.ac.ebi.pamela.layoutpipeline.SBWRenderer;
+import uk.ac.ebi.pamela.layoutpipeline.SBWRendererOptions;
 import uk.ac.ebi.pamela.layoutpipeline.SimpleOrgMolQuery;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.NewestUnifiedDataSetSelector;
@@ -56,8 +58,10 @@ public class PAMELAPipelineExec implements Runnable {
         this.depth = depth;
         this.outPath = outputPath;     
         this.layouterAlgorithm = new SBWAutoLayouterAlgorithm("/Users/pmoreno/Documents/Projects/MTBL/Layout/Test/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        //this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe");
-        this.renderer = new SBWRenderer("/Users/pmoreno/Documents/Projects/MTBL/Layout/Test/AutoLayoutWithoutLibSBML/SBMLLayoutReader.exe");
+        SBWRendererOptions opts = new SBWRendererOptions();
+        opts.setOutputFormat(SBWRendererOptions.Format.svg);
+        this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe",opts);
+        //this.renderer = new SBWRenderer("/Users/pmoreno/Documents/Projects/MTBL/Layout/Test/AutoLayoutWithoutLibSBML/SBMLLayoutReader.exe",opts);
     }
     
     /**
