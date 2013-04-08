@@ -16,17 +16,20 @@ public class PipelineExecRheaTest {
 
         Query query = new SimpleOrgMolQuery("CHEBI:27732","1");
 
-        String imageOutputPath = PropertiesUtil.getPreference("PipeLineExecRheaTestOutputPath", "/Users/conesa/CHEBI:27732.svg");
+        String imageOutputPath = PropertiesUtil.getPreference("PipeLineExecRheaTestOutputPath", "/Users/conesa/");
 
         String layoutExe = PropertiesUtil.getPreference("pathToSaveLayoutEXE","/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        String renderExe = PropertiesUtil.getPreference("pathToRendererEXE" , "/Users/conesa/Development/AutoLayoutWithoutLibSBML/SBMLLayoutReader.exe");
+        String renderExe = PropertiesUtil.getPreference("pathToRendererEXE" , "/Applications/SBW/lib/SBMLLayoutReader.exe");
 
         // No specie information so far...
         ReactionListRetriever retriever = new RheaReactionListRetriever(null);
 
         LayoutAlgorithm layoutAlg = new SBWAutoLayouterAlgorithm(layoutExe) ;
 
-        LayoutRenderer layoutRend = new SBWRenderer(renderExe);
+        SBWRendererOptions opts = new SBWRendererOptions();
+        opts.setOutputFormat(SBWRendererOptions.Format.svg);
+
+        LayoutRenderer layoutRend = new SBWRenderer(renderExe, opts);
 
         PipelineExec pipeline = new PipelineExec(query, retriever,layoutAlg,layoutRend,2, 3, imageOutputPath);
 
