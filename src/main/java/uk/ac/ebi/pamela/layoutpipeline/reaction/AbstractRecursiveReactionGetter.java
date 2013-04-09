@@ -44,7 +44,6 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
         this.depth = depth;
         this.currencyDec = currencyDec;
         this.mainCompDec = mainCompDec;
-
     }
 
     /**
@@ -100,6 +99,10 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
         }
 
         return metabRxns;
+    }
+    
+    public CurrencyCompoundDecider<C,R> getCurrencyDecider() {
+        return currencyDec;
     }
 
     /**

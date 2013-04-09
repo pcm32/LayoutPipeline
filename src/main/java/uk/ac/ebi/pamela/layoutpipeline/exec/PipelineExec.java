@@ -17,14 +17,11 @@
  */
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
-import java.io.OutputStream;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.sbml.jsbml.SBMLDocument;
 import uk.ac.ebi.mdk.domain.entity.DefaultEntityFactory;
-import uk.ac.ebi.mdk.domain.entity.Reaction;
 import uk.ac.ebi.mdk.domain.entity.Reconstruction;
-import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
 import uk.ac.ebi.mdk.io.xml.sbml.SBMLIOUtil;
 import uk.ac.ebi.pamela.layoutpipeline.LayoutAlgorithm;
 import uk.ac.ebi.pamela.layoutpipeline.LayoutRenderer;
