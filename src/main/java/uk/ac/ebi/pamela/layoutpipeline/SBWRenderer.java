@@ -91,7 +91,7 @@ public class SBWRenderer implements LayoutRenderer {
         File tempFolder = Files.createTempDir();
 
         LOGGER.info("Working on temporary folder: " + tempFolder.getAbsolutePath());
-        File tempFileIn  = new File (tempFolder.getAbsolutePath() + "/sbmlIn.xml");
+        File tempFileIn  = new File (tempFolder.getAbsolutePath() + "/sbmlInRenderer.xml");
 
         // Set the output directory to the temporary directory...
         options.setDirectoryToSaveTo(outputFilePrefix);

@@ -23,6 +23,7 @@ import org.sbml.jsbml.SBMLDocument;
 import uk.ac.ebi.mdk.domain.entity.DefaultEntityFactory;
 import uk.ac.ebi.mdk.domain.entity.Reconstruction;
 import uk.ac.ebi.mdk.io.xml.sbml.SBMLIOUtil;
+import uk.ac.ebi.mdk.io.xml.sbml.SimpleSideCompoundHandler;
 import uk.ac.ebi.pamela.layoutpipeline.LayoutAlgorithm;
 import uk.ac.ebi.pamela.layoutpipeline.LayoutRenderer;
 import uk.ac.ebi.pamela.layoutpipeline.Query;
@@ -74,7 +75,7 @@ public class PipelineExec {
     public void run() {
         List<Reconstruction> recons = retriever.getReactionsAsReconstructions(query);
         for (int i = 0; i < recons.size(); i++) {
-            SBMLIOUtil sbmlIO = new SBMLIOUtil(DefaultEntityFactory.getInstance(), sbmlLevel, sbmlVersion);
+            SBMLIOUtil sbmlIO = new SBMLIOUtil(DefaultEntityFactory.getInstance(), sbmlLevel, sbmlVersion, new SimpleSideCompoundHandler());
             SBMLDocument doc = sbmlIO.getDocument(recons.get(i));
             /**
              * Should we produce directly a layout image, or should we keep the intermediate layouted SBML? Probably for
