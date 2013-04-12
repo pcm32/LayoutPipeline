@@ -4,3 +4,4 @@ LayoutPipeline.ipr
 LayoutPipeline.iws
 RenderingOutput.png
 src/main/resources/application.properties
+.idea
