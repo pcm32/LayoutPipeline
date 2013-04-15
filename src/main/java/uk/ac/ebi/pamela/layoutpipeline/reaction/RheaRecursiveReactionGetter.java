@@ -17,6 +17,8 @@ import uk.ac.ebi.rhea.mapper.SearchOptions;
 import uk.ac.ebi.rhea.mapper.SearchSwitch;
 import uk.ac.ebi.rhea.mapper.db.RheaCompoundDbReader;
 import uk.ac.ebi.rhea.mapper.db.RheaDbReader;
+import uk.ac.ebi.xchars.SpecialCharacters;
+import uk.ac.ebi.xchars.domain.EncodingType;
 
 import java.io.IOException;
 import java.sql.*;
@@ -36,6 +38,7 @@ private Connection rheaConnection = null;
 
 private Taxonomy specie;
 private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtECNumber2OrganismProteinService();
+private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
 
     public RheaRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<Compound, RheaReactionWrapper> currencyDecider, MainCompoundDecider<Compound, RheaReactionWrapper> mainCompDecider, Taxonomy specie) {
         super(depth,currencyDecider,mainCompDecider);
@@ -184,19 +187,19 @@ private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtEC
 
     protected boolean hasUniprotIdTheSpecie (String uniprotId){
 
-        return true;
+        //return true;
 
-//        UniProtIdentifier ident = new SwissProtIdentifier(uniprotId);
-//        Collection<Taxonomy> orgs = uniProtSpecieServ.getOrganismForProteinIdentifier(ident);
-//
-//        Taxonomy orgIdent=null;
-//
-//        // I will never be null
-//        if(!orgs.isEmpty())
-//            orgIdent = orgs.iterator().next();
-//
-//        // Until we have the index return true
-//        return specie.equals(orgIdent);
+        UniProtIdentifier ident = new SwissProtIdentifier(uniprotId);
+        Collection<Taxonomy> orgs = uniProtSpecieServ.getOrganismForProteinIdentifier(ident);
+
+        Taxonomy orgIdent=null;
+
+        // I will never be null
+        if(!orgs.isEmpty())
+            orgIdent = orgs.iterator().next();
+
+        // Until we have the index return true
+        return specie.equals(orgIdent);
 
     }
 
@@ -242,7 +245,11 @@ private UniProtECNumber2OrganismProteinService uniProtSpecieServ = new UniProtEC
         if (comp != null){
 
             // Are all rhea compounds chebiId..?
-            Metabolite metabolite = new MetaboliteImpl(new ChEBIIdentifier(comp.getAccession()),"",comp.getAccession());
+            // Rhea compound name has some xml tags like <strong> <super> ....we need to clean this.
+            String compoundName = xchars.xml2Display(comp.getName(), EncodingType.CHEBI_CODE);
+
+
+            Metabolite metabolite = new MetaboliteImpl(new ChEBIIdentifier(comp.getAccession()),"",compoundName);
 
             MetabolicParticipant met = new MetabolicParticipantImplementation(metabolite, Double.valueOf(rp.getCoefficient().getValue()));
 
