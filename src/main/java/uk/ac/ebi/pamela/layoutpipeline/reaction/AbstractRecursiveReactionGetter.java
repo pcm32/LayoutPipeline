@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Pablo Moreno <pablacious at users.sf.net>
+ * Copyright (C) 2013 EMBL-EBI
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -48,7 +48,6 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
         this.depth = depth;
         this.currencyDec = currencyDec;
         this.mainCompDec = mainCompDec;
-
     }
 
     /**
@@ -110,6 +109,10 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
         }
 
         return metabRxns;
+    }
+    
+    public CurrencyCompoundDecider<C,R> getCurrencyDecider() {
+        return currencyDec;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Pablo Moreno <pablacious at users.sf.net>
+ * Copyright (C) 2013 EMBL-EBI
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,13 @@ import com.sri.biospice.warehouse.schema.object.Chemical;
 import com.sri.biospice.warehouse.schema.object.Reaction;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import uk.ac.ebi.mdk.domain.entity.Metabolite;
+import uk.ac.ebi.mdk.domain.entity.reaction.BiochemicalReaction;
+import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicParticipant;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.mdk.domain.identifier.BioWarehouseChemicalIdentifier;
 import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.metabolomes.biowh.BioChemicalReactionSetProviderFactory;
 import uk.ac.ebi.metabolomes.biowh.BiochemicalReactionSetProvider;
@@ -55,11 +61,31 @@ public class PAMELARecursiveReactionGetter extends AbstractRecursiveReactionGett
     @Override
     MetabolicReaction convertReaction(Reaction rxn) {
         try {
-            return provider.getBioChemicalRXNFromRxn(rxn);
+            BiochemicalReaction biochemrxn = provider.getBioChemicalRXNFromRxn(rxn);
+            Collection<Chemical> currencies = getCurrencyDecider().getCurrencyMetabolites(rxn);
+            Collection<BioWarehouseChemicalIdentifier> currenciesIdents = getCurrencyBWHIdents(currencies);
+            for (MetabolicParticipant part : biochemrxn.getParticipants()) {
+                Metabolite m = part.getMolecule();
+                if(currenciesIdents.contains(m.getIdentifier())) {
+                    part.setSideCompound(Boolean.TRUE);
+                }
+            }
+            return biochemrxn;
         } catch(SQLException e) {
             throw new RuntimeException(e);
         }
         
+    }
+
+    private Collection<BioWarehouseChemicalIdentifier> getCurrencyBWHIdents(Collection<Chemical> currencies) {
+        Collection<BioWarehouseChemicalIdentifier> idents = new LinkedList<BioWarehouseChemicalIdentifier>();
+        Iterator<Chemical> it = currencies.iterator();
+        while(it.hasNext()) {
+            Chemical chem = it.next();
+            BioWarehouseChemicalIdentifier ident = new BioWarehouseChemicalIdentifier(chem.getWID(), chem.getDataSetWID());
+            idents.add(ident);
+        }
+        return idents;
     }
 
 
