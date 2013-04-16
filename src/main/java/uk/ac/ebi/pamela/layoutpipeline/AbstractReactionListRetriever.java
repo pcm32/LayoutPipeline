@@ -42,7 +42,10 @@ public abstract class AbstractReactionListRetriever {
             rec.addReaction(metReaction);
         }
         List<Reconstruction> recs = new ArrayList<Reconstruction>();
-        recs.add(rec);
+
+        if (!rec.reactome().isEmpty())
+            recs.add(rec);
+
         return recs;
     }
 

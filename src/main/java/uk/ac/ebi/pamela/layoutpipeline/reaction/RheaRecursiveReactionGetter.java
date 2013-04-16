@@ -230,17 +230,37 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
         // Populate with Rhea reaction values
         mr.setDirection(Direction.UNKNOWN);
 
+        Collection<Compound> currencyComps = getCurrencyDecider().getCurrencyMetabolites(rheawrapper);
+
         // Populate MetabolicReaction collections
         for (ReactionParticipant rp :rhea.getLeftSide()){
 
             MetabolicParticipant met = convertRheaParticipantToMDKMetabolite(rp);
-            mr.addReactant(met);
+
+            // Set currency compound...
+            if(currencyComps.contains(rp.getCompound())){
+                met.setSideCompound(true);
+            }
+
+
+            if (met == null){
+                LOGGER.info("Can't convert rhea participant into a MDK participant:" + rp.toString());
+            } else {
+                mr.addReactant(met);
+            }
+
          }
 
         // Populate MetabolicReaction collections
         for (ReactionParticipant rp :rhea.getRightSide()){
 
             MetabolicParticipant met = convertRheaParticipantToMDKMetabolite(rp);
+
+
+            // Set currency compound...
+            if(currencyComps.contains(rp.getCompound())){
+                met.setSideCompound(true);
+            }
 
             if (met == null){
                 LOGGER.info("Can't convert rhea participant into a MDK participant:" + rp.toString());
@@ -269,6 +289,8 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
             Metabolite metabolite = new MetaboliteImpl(new ChEBIIdentifier(comp.getAccession()),"",compoundName);
 
             MetabolicParticipant met = new MetabolicParticipantImplementation(metabolite, Double.valueOf(rp.getCoefficient().getValue()));
+
+
 
             return met;
         }

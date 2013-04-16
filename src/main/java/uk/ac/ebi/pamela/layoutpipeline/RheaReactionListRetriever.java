@@ -74,6 +74,12 @@ public class RheaReactionListRetriever extends AbstractReactionListRetriever imp
 
         Compound compound =  rxnGetter.getRheaCompound(query.getChemicalIdentifier().getAccession());
 
+        // If the compound is not in rhea...
+        if (compound == null) {
+            LOGGER.info("The compound " + query.getChemicalIdentifier() + " is not found in rhea");
+            return reactions;
+        }
+
         try {
             reactions = rxnGetter.getReactions(compound);
         } catch (SQLException e) {

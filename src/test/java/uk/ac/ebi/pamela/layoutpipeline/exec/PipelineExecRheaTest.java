@@ -14,7 +14,7 @@ public class PipelineExecRheaTest {
     @Test
     public void testRun() throws Exception {
 
-        Query query = new SimpleOrgMolQuery("CHEBI:27732","1");
+        Query query = new SimpleOrgMolQuery("CHEBI:57972","303");
 
         String imageOutputPath = PropertiesUtil.getPreference("PipeLineExecRheaTestOutputPath", "/Users/conesa/");
 
