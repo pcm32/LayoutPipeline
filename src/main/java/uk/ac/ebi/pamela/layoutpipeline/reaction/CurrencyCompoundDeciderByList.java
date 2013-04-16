@@ -34,7 +34,7 @@ public class CurrencyCompoundDeciderByList implements CurrencyCompoundDecider<Co
 
     Collection<String> currencylist;
 
-    CurrencyCompoundDeciderByList (Collection<String> currencylist){
+    public CurrencyCompoundDeciderByList (Collection<String> currencylist){
         this.currencylist = currencylist;
 
     }

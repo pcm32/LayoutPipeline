@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,6 +34,8 @@ import java.util.Properties;
 public class PropertiesUtil {
 
     static Properties props = null;
+    static Preferences prefs;
+
     private static final Logger LOGGER = Logger.getLogger( PropertiesUtil.class );
 
     private PropertiesUtil(){}
@@ -42,6 +45,13 @@ public class PropertiesUtil {
         // If there aren't any properties...load them
         if (props == null)  readProperties();
         return props.getProperty(propertyName);
+    }
+
+    static public String getPreference(String preferenceName, String defaultValue){
+
+        // If there isn't any preference...load them
+        if (prefs == null)  readPreferences();
+        return prefs.get(preferenceName, defaultValue);
     }
 
     static private void readProperties() {
@@ -61,6 +71,10 @@ public class PropertiesUtil {
             props = null;
         }
 
+    }
+
+    static private void readPreferences(){
+        prefs = Preferences.userRoot().node(PropertiesUtil.class.getName());
     }
 
 }

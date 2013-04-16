@@ -45,12 +45,16 @@ public class RheaReactionWrapper {
         if (this == o) return true;
         if (!(o instanceof RheaReactionWrapper)) return false;
         final RheaReactionWrapper otherWrapper = (RheaReactionWrapper) o;
-        boolean sameId = this.rheaReaction.getId().equals(otherWrapper.getRheaReaction().getId());
+        boolean sameId = (this.rheaReaction.getId().equals(otherWrapper.getRheaReaction().getId()));
 
         return sameId;
     }
 
     public Reaction getRheaReaction(){
         return this.rheaReaction;
+    }
+
+    public String toString(){
+        return rheaReaction.getId().toString();
     }
 }

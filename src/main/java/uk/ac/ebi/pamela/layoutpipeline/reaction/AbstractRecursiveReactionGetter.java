@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
 
 /**
@@ -39,6 +41,8 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     private CurrencyCompoundDecider<C, R> currencyDec;
     private MainCompoundDecider<C, R> mainCompDec;
     private Integer depth;
+
+    private static final Logger LOGGER = Logger.getLogger(AbstractRecursiveReactionGetter.class.getName());
 
     public AbstractRecursiveReactionGetter(Integer depth, CurrencyCompoundDecider<C, R> currencyDec, MainCompoundDecider<C, R> mainCompDec) {
         this.depth = depth;
@@ -61,6 +65,10 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     }
 
     private Collection<MetabolicReaction> getReactions(C chem, Integer depth) throws SQLException {
+
+
+        LOGGER.debug ("Getting reactions for chemical " + chem.toString() + ", depth : " + depth );
+
         Collection<MetabolicReaction> metabRxns = new ArrayList<MetabolicReaction>();
         Collection<R> rxns = getReactionsForChemical(chem);
         Collection<C> chemsToVisit = new HashSet<C>();
@@ -92,6 +100,8 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
                 }
             }
         }
+
+
         if (depth > 0) {
             for (C chemical : chemsToVisit) {
                 metabRxns.addAll(getReactions(chemical, depth - 1));
@@ -121,4 +131,12 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
      * @return the converted metabolic reaction.
      */
     abstract MetabolicReaction convertReaction(R rxn);
+
+    boolean isReactionVisited(R reaction){
+        return visitedReactions.contains(reaction);
+    }
+    void addVisitedReaction(R reaction){
+        visitedReactions.add(reaction);
+    }
+
 }
