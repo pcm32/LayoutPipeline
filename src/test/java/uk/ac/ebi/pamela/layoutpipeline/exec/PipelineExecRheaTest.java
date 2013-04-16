@@ -1,7 +1,7 @@
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
+import com.google.common.io.Files;
 import org.junit.Test;
-import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.pamela.layoutpipeline.*;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
 
@@ -16,13 +16,14 @@ public class PipelineExecRheaTest {
 
         Query query = new SimpleOrgMolQuery("CHEBI:57972","303");
 
-        String imageOutputPath = PropertiesUtil.getPreference("PipeLineExecRheaTestOutputPath", "/Users/conesa/");
+        String imageOutputPath = Files.createTempDir().getAbsolutePath();
 
-        String layoutExe = PropertiesUtil.getPreference("pathToSaveLayoutEXE","/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        String renderExe = PropertiesUtil.getPreference("pathToRendererEXE" , "/Applications/SBW/lib/SBMLLayoutReader.exe");
+        //String layoutExe = PropertiesUtil.getPreference("pathToSaveLayoutEXE","/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
+        String layoutExe = PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE,"/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
+        String renderExe = PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToRendererEXE , "/Applications/SBW/lib/SBMLLayoutReader.exe");
 
         // No specie information so far...
-        ReactionListRetriever retriever = new RheaReactionListRetriever(null);
+        ReactionListRetriever retriever = new RheaReactionListRetriever();
 
         LayoutAlgorithm layoutAlg = new SBWAutoLayouterAlgorithm(layoutExe) ;
 

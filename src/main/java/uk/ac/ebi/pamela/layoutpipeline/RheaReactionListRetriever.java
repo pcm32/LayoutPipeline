@@ -45,7 +45,7 @@ public class RheaReactionListRetriever extends AbstractReactionListRetriever imp
     private static final String DEFAULT_CURRENCIES = PropertiesUtil.getProperty("defaultRheaCurrencies");
     private static final Logger LOGGER = Logger.getLogger( RheaReactionListRetriever.class );
 
-    public RheaReactionListRetriever(Taxonomy organism) throws IOException, SQLException {
+    public RheaReactionListRetriever() throws IOException, SQLException {
 
         this.currencyDecider = new CurrencyCompoundDeciderByList(getCurrencyList());
         this.mainCompoundDecider = new MainCompoundDeciderRhea();

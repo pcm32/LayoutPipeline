@@ -40,6 +40,7 @@ import uk.ac.ebi.xchars.domain.EncodingType;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+import uk.ac.ebi.pamela.layoutpipeline.utils.RheaDBConnectionSetter;
 
 
 /**
@@ -67,10 +68,10 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
 
 
         // Get the connection properties
-        String rheaUrl = PropertiesUtil.getProperty("rhea.url");
-        String rheaUser = PropertiesUtil.getProperty("rhea.username");
-        String rheaPassword = PropertiesUtil.getProperty("rhea.password");
-        String rheaSchema = PropertiesUtil.getProperty("rhea.schema");
+        String rheaUrl = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheUrl);
+        String rheaUser = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheaUsername);
+        String rheaPassword = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheaPassword);
+        String rheaSchema = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheaSchema);
 
         // We should externalise this.
         try {

@@ -14,44 +14,70 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package uk.ac.ebi.pamela.layoutpipeline.utils;
 
+import java.io.BufferedReader;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /**
- * Created with IntelliJ IDEA.
- * User: conesa
- * Date: 20/03/2013
- * Time: 11:30
- * Singleton class for serving properties..
+ * Created with IntelliJ IDEA. User: conesa Date: 20/03/2013 Time: 11:30 Singleton class for serving properties..
  */
 public class PropertiesUtil {
 
     static Properties props = null;
     static Preferences prefs;
+    private static final Logger LOGGER = Logger.getLogger(PropertiesUtil.class);
 
-    private static final Logger LOGGER = Logger.getLogger( PropertiesUtil.class );
+    public enum PrefNames {
 
-    private PropertiesUtil(){}
+        pathToRendererEXE("Please ente the path to SBW SBML LayoutReader.exe"),
+        pathToSaveLayoutEXE("Please enter the path to SBW SaveLayout.exe");
+        
+        String msg;
 
-    static public String getProperty(String propertyName){
+        PrefNames(String msg) {
+            this.msg = msg;
+        }
 
-        // If there aren't any properties...load them
-        if (props == null)  readProperties();
-        return props.getProperty(propertyName);
+        String getMessage() {
+            return msg;
+        }
     }
 
-    static public String getPreference(String preferenceName, String defaultValue){
+    private PropertiesUtil() {
+    }
 
+    static public String getProperty(String propertyName) {
+
+        // If there aren't any properties...load them
+        if (props == null) {
+            readProperties();
+        }
+        return props.getProperty(propertyName);
+    }
+    
+    static public String getPreference(String prefName, String defaultValue) {
         // If there isn't any preference...load them
-        if (prefs == null)  readPreferences();
-        return prefs.get(preferenceName, defaultValue);
+        if (prefs == null) {
+            readPreferences();
+        }
+        return prefs.get(prefName, defaultValue);
+    }
+    
+    static public String getPreference(RheaDBConnectionSetter.RheaDBField field) {
+        return getPreference(field.toString(), "");
+    }
+
+    static public String getPreference(PrefNames prefName, String defaultValue) {
+
+        return getPreference(prefName.toString(), defaultValue);
     }
 
     static private void readProperties() {
@@ -73,8 +99,23 @@ public class PropertiesUtil {
 
     }
 
-    static private void readPreferences(){
+    static private void readPreferences() {
         prefs = Preferences.userRoot().node(PropertiesUtil.class.getName());
     }
 
+    static public void setPreference(String preferenceName, String value) throws IOException, BackingStoreException {
+        prefs = Preferences.userRoot().node(PropertiesUtil.class.getName());
+        prefs.put(preferenceName, value);
+        prefs.flush();
+    }
+
+    public static void main(String[] args) throws IOException, BackingStoreException {
+
+        for (PrefNames prefNames : PrefNames.values()) {
+            System.out.println(prefNames.getMessage());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String saveLayoutPath = reader.readLine();
+            setPreference(prefNames.toString(), saveLayoutPath);
+        }
+    }
 }
