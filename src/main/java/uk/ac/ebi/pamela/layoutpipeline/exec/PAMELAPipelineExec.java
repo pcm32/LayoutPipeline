@@ -17,6 +17,7 @@
 
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
+import com.sri.biospice.warehouse.database.PooledWarehouseManager;
 import java.io.IOException;
 import java.sql.SQLException;
 import uk.ac.ebi.metabolomes.biowh.BiowhConnection;
@@ -53,7 +54,7 @@ public class PAMELAPipelineExec implements Runnable {
     private final String outPath;
     
     public PAMELAPipelineExec(Integer depth, String outputPath) throws IOException, SQLException {
-        BiowhPooledConnection bwhc = new BiowhPooledConnection();
+        BiowhPooledConnection bwhc = new BiowhPooledConnection();        
         DataSetProvider.loadPropsForCurrentSchema();
         this.selector = new NewestUnifiedDataSetSelector();
         this.depth = depth;
@@ -86,11 +87,15 @@ public class PAMELAPipelineExec implements Runnable {
         exec.run();
     }
     
+    public void freeResources() {
+        PooledWarehouseManager.poolRelease();
+    }
     
     public static void main(String[] args) throws IOException, SQLException {
         PAMELAPipelineExec exec = new PAMELAPipelineExec(3, "/tmp/TestPamelaLayout");        
         exec.setQuery(new SimpleOrgMolQuery("CHEBI:17737", "9606"));
         exec.run();
+        exec.freeResources();
     }
 
 

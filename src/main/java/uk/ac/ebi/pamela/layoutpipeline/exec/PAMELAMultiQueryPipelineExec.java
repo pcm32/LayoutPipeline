@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
 import java.io.BufferedReader;
@@ -25,44 +24,40 @@ import uk.ac.ebi.mdk.domain.identifier.ChEBIIdentifier;
 import uk.ac.ebi.pamela.layoutpipeline.SimpleOrgMolQuery;
 
 /**
- * @name    PAMELAPipelineExec
- * @date    2013.04.04
+ * @name PAMELAPipelineExec
+ * @date 2013.04.04
  * @version $Rev$ : Last Changed $Date$
- * @author  Pablo Moreno <pablacious at users.sf.net>
- * @author  $Author$ (this version)
- * @brief   ...class description...
+ * @author Pablo Moreno <pablacious at users.sf.net>
+ * @author $Author$ (this version)
+ * @brief ...class description...
  *
  */
 public class PAMELAMultiQueryPipelineExec {
-    
-    
+
     public static void main(String[] args) throws IOException, SQLException {
         String organismTaxId = args[0];
         String pathToOut = args[1];
         String pathToChemicalIdentifierList = args[2];
-        
-        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, pathToOut);   
-        
+
+        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, pathToOut);
+
         BufferedReader reader = new BufferedReader(new FileReader(pathToChemicalIdentifierList));
-        
+
         String id;
-        int count=0;
+        int count = 0;
         Long startTime = System.currentTimeMillis();
-        while((id = reader.readLine())!=null) {
+        while ((id = reader.readLine()) != null) {
             ChEBIIdentifier identObj = new ChEBIIdentifier(id);
-            if(identObj!=null) {
-                exec.setQuery(new SimpleOrgMolQuery(identObj.getAccession(), organismTaxId));
-                exec.run();
-                count++;
-                Float speed = (count+0f)/((System.currentTimeMillis() - startTime)/1000);
-                if(count%10 == 0) {
-                    System.out.println("Done "+count+" identifiers "+speed+" [idents/sec]");
-                }
+            exec.setQuery(new SimpleOrgMolQuery(identObj.getAccession(), organismTaxId));
+            exec.run();
+            count++;
+            Float speed = (count + 0f) / ((System.currentTimeMillis() - startTime) / 1000);
+            if (count % 10 == 0) {
+                System.out.println("Done " + count + " identifiers " + speed + " [idents/sec]");
             }
         }
-        
-        
+        Float speed = (count + 0f) / ((System.currentTimeMillis() - startTime) / 1000);
+        System.out.println("Done " + count + " identifiers " + speed + " [idents/sec]");
+        exec.freeResources();
     }
-
-
 }
