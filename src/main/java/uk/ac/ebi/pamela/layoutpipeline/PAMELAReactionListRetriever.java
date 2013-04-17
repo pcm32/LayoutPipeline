@@ -20,15 +20,12 @@ import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import com.sri.biospice.warehouse.schema.DataSet;
 import com.sri.biospice.warehouse.schema.object.Chemical;
 import com.sri.biospice.warehouse.schema.object.Reaction;
-import uk.ac.ebi.metabolomes.biowh.BioChemicalReactionSetProviderFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
 import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
-import uk.ac.ebi.metabolomes.biowh.BiochemicalReactionSetProvider;
-import uk.ac.ebi.metabolomes.biowh.BiowhPooledConnection;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.BWHConnectivityBasedCurrencyDecider;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.BWHDummyMainCompDecider;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.CurrencyCompoundDecider;
@@ -69,8 +66,8 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
 
         // Search for chemical identifier in data set
         if (ds != null) {
-            BiochemicalReactionSetProvider provider =
-                    BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
+            //BiochemicalReactionSetProvider provider =
+            //        BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
 
             // Get small molecule that has the provided Cross reference.
             try {

@@ -16,6 +16,7 @@
  */
 package uk.ac.ebi.pamela.layoutpipeline.bwh;
 
+import com.sri.biospice.warehouse.database.PooledWarehouse;
 import com.sri.biospice.warehouse.database.PooledWarehouseManager;
 import com.sri.biospice.warehouse.database.Warehouse;
 import com.sri.biospice.warehouse.schema.DataSet;
@@ -61,6 +62,14 @@ public class NewestUnifiedDataSetSelector extends AbstractDataSetSelector implem
             }
         } catch (SQLException e) {
             LOGGER.error("Could not load DataSets", e);
+        } finally {
+            try {
+                if(bwh instanceof PooledWarehouse) {
+                    bwh.close();
+                }
+            } catch(SQLException e) {
+                throw new RuntimeException("Could not close connection");
+            }
         }
         return res;
     }
