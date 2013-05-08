@@ -84,8 +84,22 @@
     <dependency>
         <groupId>uk.ac.ebi.mdk</groupId>
         <artifactId>warehouse-loader</artifactId>
-        <version>1.3.5-SNAPSHOT</version>
+        <version>1.4.1-SNAPSHOT</version>
         <type>jar</type>
+        <exclusions>
+            <exclusion>
+                <groupId>chemaxon</groupId>
+                <artifactId>jchem</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>com.sri</groupId>
+                <artifactId>BioWarehouse-DBSchema</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>com.sri</groupId>
+                <artifactId>BioWarehouse-ElementMap</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>oracle</groupId>
