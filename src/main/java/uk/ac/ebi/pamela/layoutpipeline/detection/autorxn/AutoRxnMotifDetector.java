@@ -30,7 +30,7 @@ public class AutoRxnMotifDetector extends AbstractReactionMotifDetector implemen
     }
 
     @Override
-    Set<MetabolicReaction> findNewMatch() {
+    protected Set<MetabolicReaction> findNewMatch() {
         Set<MetabolicReaction> toRem = new HashSet<MetabolicReaction>();
         for(MetabolicReaction rxn : recons.reactome()) {
             if (visitedReactions.contains(rxn))
@@ -45,7 +45,8 @@ public class AutoRxnMotifDetector extends AbstractReactionMotifDetector implemen
             }
 
             visitedReactions.add(rxn);
-            if(reactsMet.retainAll(prodsMet) && reactsMet.size()>0)
+            reactsMet.retainAll(prodsMet);
+            if(reactsMet.size()>0)
                 toRem.add(rxn);
 
             if (toRem.size()>0)

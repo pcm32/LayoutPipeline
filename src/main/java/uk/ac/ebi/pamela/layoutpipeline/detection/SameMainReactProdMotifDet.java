@@ -34,7 +34,7 @@ public class SameMainReactProdMotifDet extends AbstractReactionMotifDetector imp
 
 
     @Override
-    Set<MetabolicReaction> findNewMatch() {
+    protected Set<MetabolicReaction> findNewMatch() {
         Set<MetabolicReaction> toRet = new HashSet<MetabolicReaction>();
         for (MetabolicReaction rxn : recons.reactome()) {
 
