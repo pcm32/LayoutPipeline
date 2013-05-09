@@ -17,18 +17,26 @@
 
 package uk.ac.ebi.pamela.layoutpipeline;
 
-import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
-import uk.ac.ebi.mdk.domain.identifier.type.ChemicalIdentifier;
 
+import org.junit.Test;
+
+import static junit.framework.Assert.* ;
 /**
- * Represents the query object which contains the set of elements that will be used by the pipeline to produce a list
- * of reactions.
- * 
- * @author pmoreno
+ * Created with IntelliJ IDEA.
+ * User: conesa
+ * Date: 27/02/2013
+ * Time: 09:58
+ * To change this template use File | Settings | File Templates.
  */
-public interface Query {
-    
-    public Taxonomy getOrganismIdentifier();
-    public ChemicalIdentifier getChemicalIdentifier();
-    
+public class SimpleOrgMolQueryTest {
+    @Test
+    public void testGetters() throws Exception {
+
+        SimpleOrgMolQuery query = new SimpleOrgMolQuery("chebiid", "3130");
+
+        assertEquals("CHEBI ID initialization test" , "chebiid", query.getChemicalIdentifier().getAccession());
+
+        assertEquals("TAX ID initialization test" , "3130", query.getOrganismIdentifier().getAccession());
+
+    }
 }

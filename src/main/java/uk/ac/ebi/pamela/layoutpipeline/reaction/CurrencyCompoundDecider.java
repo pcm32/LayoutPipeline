@@ -15,20 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package uk.ac.ebi.pamela.layoutpipeline;
+package uk.ac.ebi.pamela.layoutpipeline.reaction;
 
-import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
-import uk.ac.ebi.mdk.domain.identifier.type.ChemicalIdentifier;
+import java.util.Collection;
 
 /**
- * Represents the query object which contains the set of elements that will be used by the pipeline to produce a list
- * of reactions.
- * 
- * @author pmoreno
+ * @name    CurrencyCompoundDecider
+ * @date    2013.03.21
+ * @version $Rev$ : Last Changed $Date$
+ * @author  Pablo Moreno <pablacious at users.sf.net>
+ * @author  $Author$ (this version)
+ * @brief   Describes functionality of deciding within a reaction which metabolites are currency metabolites.
+ *
  */
-public interface Query {
-    
-    public Taxonomy getOrganismIdentifier();
-    public ChemicalIdentifier getChemicalIdentifier();
-    
+public interface CurrencyCompoundDecider<C,R> {
+
+    /**
+     * Defines which metabolites within a reaction are currency metabolites.
+     * 
+     * @param rxn
+     * @return 
+     */
+    public Collection<C> getCurrencyMetabolites(R rxn);
+
 }

@@ -1,10 +1,27 @@
+<!--
+  ~ Copyright (C) 2013 EMBL-EBI
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Lesser General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>uk.ac.ebi.pamela</groupId>
   <artifactId>LayoutPipeline</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.3</version>
   <packaging>jar</packaging>
 
   <name>LayoutPipeline</name>
@@ -13,25 +30,27 @@
   </description>
   <url>http://maven.apache.org</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mdk.version>1.4.1-SNAPSHOT</mdk.version>
+        <netbeans.hint.license>lgpl30_EMBL</netbeans.hint.license>
+    </properties>
 
   <dependencies>
       <dependency>
           <groupId>uk.ac.ebi.mdk</groupId>
           <artifactId>mdk-domain-identifier</artifactId>
-          <version>1.3.3-SNAPSHOT</version>
+          <version>${mdk.version}</version>
       </dependency>
       <dependency>
           <groupId>uk.ac.ebi.mdk</groupId>
           <artifactId>mdk-domain-entity</artifactId>
-          <version>1.3.3-SNAPSHOT</version>
+          <version>${mdk.version}</version>
       </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.8.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -43,8 +62,105 @@
     <dependency>
       <groupId>uk.ac.ebi.mdk</groupId>
       <artifactId>mdk-io-xml-parsers</artifactId>
-      <version>1.3.3-SNAPSHOT</version>
+      <version>${mdk.version}</version>
       <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.3.2</version>
+    </dependency>
+    <dependency>
+        <groupId>uk.ac.ebi.rhea</groupId>
+        <artifactId>rhea-mapper</artifactId>
+        <version>3.7.1</version>
+        <exclusions>
+            <exclusion>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>uk.ac.ebi.mdk</groupId>
+        <artifactId>warehouse-loader</artifactId>
+        <version>1.4.1-SNAPSHOT</version>
+        <type>jar</type>
+        <exclusions>
+            <exclusion>
+                <groupId>chemaxon</groupId>
+                <artifactId>jchem</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>com.sri</groupId>
+                <artifactId>BioWarehouse-DBSchema</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>com.sri</groupId>
+                <artifactId>BioWarehouse-ElementMap</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>oracle</groupId>
+      <artifactId>ojdbc6</artifactId>
+      <version>11.2.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>uk.ac.ebi.xchars</groupId>
+      <artifactId>xchars</artifactId>
+      <version>1.2.6</version>
+    </dependency>
+
+
   </dependencies>
+  
+  <repositories>
+       <repository>
+            <id>ebi-repo</id>
+            <name>EBI maven repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>maven-restlet</id>
+            <name>Public online Restlet repository</name>
+            <url>http://maven.restlet.org</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+<!--        <repository>
+            <id>biobabel</id>
+            <name>biobabel</name>
+            <url>http://www.ebi.ac.uk/~biobabel/maven2_repo</url>
+        </repository>-->
+
+        <repository>
+            <id>ebi-repo-snapshots</id>
+            <name>EBI maven snapshots repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:10080</updatePolicy>
+                <!-- weekly -->
+            </snapshots>
+        </repository>
+        
+        <repository>
+            <id>biobabel</id>
+            <name>biobabel</name>
+            <url>http://www.ebi.ac.uk/~biobabel/maven2_repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:10080</updatePolicy>
+                <!-- weekly -->
+            </snapshots>
+        </repository>
+
+    </repositories>
 </project>

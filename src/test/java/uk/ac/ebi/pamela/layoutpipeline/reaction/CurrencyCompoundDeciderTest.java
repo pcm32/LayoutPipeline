@@ -15,20 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package uk.ac.ebi.pamela.layoutpipeline;
+package uk.ac.ebi.pamela.layoutpipeline.reaction;
 
-import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
-import uk.ac.ebi.mdk.domain.identifier.type.ChemicalIdentifier;
+import uk.ac.ebi.rhea.domain.Compound;
+import uk.ac.ebi.rhea.domain.Reaction;
+
+import java.util.Collection;
 
 /**
- * Represents the query object which contains the set of elements that will be used by the pipeline to produce a list
- * of reactions.
- * 
- * @author pmoreno
+ * User: conesa
+ * Date: 25/03/2013
+ * Time: 12:24
  */
-public interface Query {
-    
-    public Taxonomy getOrganismIdentifier();
-    public ChemicalIdentifier getChemicalIdentifier();
-    
+public class CurrencyCompoundDeciderTest implements CurrencyCompoundDecider<Compound,Reaction> {
+
+
+
+    public Collection<Compound> getCurrencyMetabolites(Reaction rxn) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

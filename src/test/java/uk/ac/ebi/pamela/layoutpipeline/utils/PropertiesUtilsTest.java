@@ -15,20 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package uk.ac.ebi.pamela.layoutpipeline;
+package uk.ac.ebi.pamela.layoutpipeline.utils;
 
-import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
-import uk.ac.ebi.mdk.domain.identifier.type.ChemicalIdentifier;
-
+import static org.junit.Assert.*;
+import org.junit.Test;
 /**
- * Represents the query object which contains the set of elements that will be used by the pipeline to produce a list
- * of reactions.
- * 
- * @author pmoreno
+ * Created with IntelliJ IDEA.
+ * User: conesa
+ * Date: 20/03/2013
+ * Time: 11:50
+ * To change this template use File | Settings | File Templates.
  */
-public interface Query {
-    
-    public Taxonomy getOrganismIdentifier();
-    public ChemicalIdentifier getChemicalIdentifier();
-    
+public class PropertiesUtilsTest {
+
+    @Test
+    public void testProperties(){
+
+        String user = PropertiesUtil.getProperty("rhea.username");
+        assertTrue(PropertiesUtil.getProperty("rhea.username") != null);
+        assertTrue(PropertiesUtil.getProperty("rhea.password") != null);
+        assertTrue(PropertiesUtil.getProperty("rhea.url") != null);
+
+    }
+
 }
