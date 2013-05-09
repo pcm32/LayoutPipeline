@@ -1,9 +1,11 @@
-package uk.ac.ebi.pamela.layoutpipeline.detection;
+package uk.ac.ebi.pamela.layoutpipeline.detection.autorxn;
 
 import uk.ac.ebi.mdk.domain.entity.Metabolite;
 import uk.ac.ebi.mdk.domain.entity.Reconstruction;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicParticipant;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.pamela.layoutpipeline.detection.AbstractReactionMotifDetector;
+import uk.ac.ebi.pamela.layoutpipeline.detection.ReactionMotifDetector;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -15,9 +15,9 @@ import java.util.Set;
  */
 public abstract class AbstractReactionMotifDetector {
 
-    final Reconstruction recons;
-    Set<MetabolicReaction> currentGroup;
-    Set<MetabolicReaction> visitedReactions;
+    protected final Reconstruction recons;
+    protected Set<MetabolicReaction> currentGroup;
+    protected Set<MetabolicReaction> visitedReactions;
 
     public AbstractReactionMotifDetector(Reconstruction recons) {
         this.recons = recons;
@@ -54,5 +54,5 @@ public abstract class AbstractReactionMotifDetector {
      *
      * @return a set containing a set of reactions that match the motif, or an empty set if no match is found.
      */
-    abstract Set<MetabolicReaction> findNewMatch();
+    protected abstract Set<MetabolicReaction> findNewMatch();
 }

@@ -14,8 +14,8 @@ import java.util.LinkedList;
  * To change this template use File | Settings | File Templates.
  */
 public class AbstractMoleculeDetector {
-    Collection<Identifier> chemIdents;
-    Collection<String> names;
+    protected Collection<Identifier> chemIdents;
+    protected Collection<String> names;
 
     public AbstractMoleculeDetector() {
         chemIdents = new LinkedList<Identifier>();

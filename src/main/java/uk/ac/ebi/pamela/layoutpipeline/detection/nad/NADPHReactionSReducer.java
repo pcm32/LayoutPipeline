@@ -1,8 +1,11 @@
-package uk.ac.ebi.pamela.layoutpipeline.detection;
+package uk.ac.ebi.pamela.layoutpipeline.detection.nad;
 
 import uk.ac.ebi.mdk.domain.entity.Metabolite;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicParticipant;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.pamela.layoutpipeline.detection.MoleculeDetector;
+import uk.ac.ebi.pamela.layoutpipeline.detection.ReactionSetReducer;
+import uk.ac.ebi.pamela.layoutpipeline.detection.nad.*;
 
 import java.util.Collection;
 import java.util.HashSet;

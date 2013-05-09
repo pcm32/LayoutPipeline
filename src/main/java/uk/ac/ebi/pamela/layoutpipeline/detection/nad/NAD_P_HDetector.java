@@ -1,6 +1,8 @@
-package uk.ac.ebi.pamela.layoutpipeline.detection;
+package uk.ac.ebi.pamela.layoutpipeline.detection.nad;
 
 import uk.ac.ebi.mdk.domain.identifier.*;
+import uk.ac.ebi.pamela.layoutpipeline.detection.AbstractMoleculeDetector;
+import uk.ac.ebi.pamela.layoutpipeline.detection.MoleculeDetector;
 
 import java.util.LinkedList;
 

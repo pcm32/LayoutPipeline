@@ -1,9 +1,11 @@
-package uk.ac.ebi.pamela.layoutpipeline.detection;
+package uk.ac.ebi.pamela.layoutpipeline.detection.nad;
 
 import uk.ac.ebi.mdk.domain.identifier.BioCycChemicalIdentifier;
 import uk.ac.ebi.mdk.domain.identifier.ChEBIIdentifier;
 import uk.ac.ebi.mdk.domain.identifier.KEGGCompoundIdentifier;
 import uk.ac.ebi.mdk.domain.identifier.PubChemCompoundIdentifier;
+import uk.ac.ebi.pamela.layoutpipeline.detection.AbstractMoleculeDetector;
+import uk.ac.ebi.pamela.layoutpipeline.detection.MoleculeDetector;
 
 /**
  * Created with IntelliJ IDEA.
