@@ -17,6 +17,7 @@
 
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.sbml.jsbml.SBMLDocument;
@@ -28,6 +29,7 @@ import uk.ac.ebi.pamela.layoutpipeline.LayoutAlgorithm;
 import uk.ac.ebi.pamela.layoutpipeline.LayoutRenderer;
 import uk.ac.ebi.pamela.layoutpipeline.Query;
 import uk.ac.ebi.pamela.layoutpipeline.ReactionListRetriever;
+import uk.ac.ebi.pamela.layoutpipeline.detection.ReconsMotifCleaner;
 
 /**
  * @name PipelineExec
@@ -49,6 +51,8 @@ public class PipelineExec {
     private Integer sbmlLevel;
     private Integer sbmlVersion;
     private String imageOutputPath;
+    private List<ReconsMotifCleaner> reconsCleaners;
+
 
     /**
      *
@@ -70,11 +74,19 @@ public class PipelineExec {
         this.sbmlLevel = sbmlLevel;
         this.sbmlVersion = sbmlVersion;
         this.imageOutputPath = imageOutputPath;
+        this.reconsCleaners = new LinkedList<ReconsMotifCleaner>();
+    }
+
+    public void addReconstructionCleaners(ReconsMotifCleaner cleaner) {
+        this.reconsCleaners.add(cleaner);
     }
 
     public void run() {
         List<Reconstruction> recons = retriever.getReactionsAsReconstructions(query);
         for (int i = 0; i < recons.size(); i++) {
+            for (ReconsMotifCleaner cleaner : reconsCleaners) {
+                cleaner.cleanRecons(recons.get(i));
+            }
             SBMLIOUtil sbmlIO = new SBMLIOUtil(DefaultEntityFactory.getInstance(), sbmlLevel, sbmlVersion, new SimpleSideCompoundHandler());
             SBMLDocument doc = sbmlIO.getDocument(recons.get(i));
             /**

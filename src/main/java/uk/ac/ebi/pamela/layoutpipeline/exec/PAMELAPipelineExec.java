@@ -32,6 +32,8 @@ import uk.ac.ebi.pamela.layoutpipeline.SBWRendererOptions;
 import uk.ac.ebi.pamela.layoutpipeline.SimpleOrgMolQuery;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.NewestUnifiedDataSetSelector;
+import uk.ac.ebi.pamela.layoutpipeline.detection.autorxn.AutoRxnReconsMotifCleaner;
+import uk.ac.ebi.pamela.layoutpipeline.detection.nad.NADRelatedReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
 
 /**
@@ -84,6 +86,8 @@ public class PAMELAPipelineExec implements Runnable {
     
     public void run() {
         PipelineExec exec = new PipelineExec(query, rxnRetriever, layouterAlgorithm, renderer, 2, 3, outPath);
+        exec.addReconstructionCleaners(new NADRelatedReconsMotifCleaner());
+        exec.addReconstructionCleaners(new AutoRxnReconsMotifCleaner());
         exec.run();
     }
     
@@ -93,7 +97,8 @@ public class PAMELAPipelineExec implements Runnable {
     
     public static void main(String[] args) throws IOException, SQLException {
         PAMELAPipelineExec exec = new PAMELAPipelineExec(3, "/tmp/TestPamelaLayout");        
-        exec.setQuery(new SimpleOrgMolQuery("CHEBI:17737", "9606"));
+        //exec.setQuery(new SimpleOrgMolQuery("CHEBI:17737", "9606"));
+        exec.setQuery(new SimpleOrgMolQuery("CHEBI:18095", "9606"));
         exec.run();
         exec.freeResources();
     }
