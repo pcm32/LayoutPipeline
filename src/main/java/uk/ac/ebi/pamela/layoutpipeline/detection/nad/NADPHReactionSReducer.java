@@ -1,10 +1,12 @@
 package uk.ac.ebi.pamela.layoutpipeline.detection.nad;
 
 import uk.ac.ebi.mdk.domain.entity.Metabolite;
+import uk.ac.ebi.mdk.domain.entity.Reconstruction;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicParticipant;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
 import uk.ac.ebi.pamela.layoutpipeline.detection.MoleculeDetector;
 import uk.ac.ebi.pamela.layoutpipeline.detection.ReactionSetReducer;
+import uk.ac.ebi.pamela.layoutpipeline.detection.RxnParticipantsSetComparator;
 import uk.ac.ebi.pamela.layoutpipeline.detection.nad.*;
 
 import java.util.Collection;
@@ -12,6 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *
+ *
  * Created with IntelliJ IDEA.
  * User: pmoreno
  * Date: 8/5/13
@@ -20,12 +24,10 @@ import java.util.Set;
  */
 public class NADPHReactionSReducer implements ReactionSetReducer {
 
-    MoleculeDetector nadhDetector = new NADHDetector();
-    MoleculeDetector nadphDetector = new NADPHDetector();
-    MoleculeDetector nadDetector = new NADDetector();
-    MoleculeDetector nadpDetector = new NADPDetector();
-    MoleculeDetector nad_p_Dectector = new NAD_P_Detector();
-    MoleculeDetector nad_p_hDetector = new NAD_P_HDetector();
+    RxnParticipantSetDetector nadhSetDet = new NADHRxnParticipantSetDetector();
+    RxnParticipantSetDetector nadphSetDet = new NADPHRxnParticipantSetDetector();
+    RxnParticipantSetDetector nad_p_SetDet = new NADP_P_HRxnParticipantSetDetector();
+    RxnParticipantsSetComparator comparator = new RxnParticipantsSetComparator();
 
     @Override
     public Set<MetabolicReaction> reduceReactions(Set<MetabolicReaction> rxns) {
@@ -55,8 +57,8 @@ public class NADPHReactionSReducer implements ReactionSetReducer {
      * @return set containing a reaction to be removed.
      */
     private Set<MetabolicReaction> pairIsComparable(MetabolicReaction rxnA, MetabolicReaction rxnB) {
-        Set<Metabolite> onlyInA = onlyInFirstRXN(rxnA,rxnB);
-        Set<Metabolite> onlyInB = onlyInFirstRXN(rxnB,rxnA);
+        Set<Metabolite> onlyInA = comparator.onlyInFirstRXN(rxnA,rxnB);
+        Set<Metabolite> onlyInB = comparator.onlyInFirstRXN(rxnB,rxnA);
 
         Set<MetabolicReaction> toRet = new HashSet<MetabolicReaction>();
 
@@ -73,51 +75,16 @@ public class NADPHReactionSReducer implements ReactionSetReducer {
     }
 
     private boolean isNADGeneralSet(Set<Metabolite> onlyInB) {
-        return isSetWithProtons(onlyInB,nad_p_hDetector,nad_p_Dectector);
+        return nad_p_SetDet.isSet(onlyInB);
     }
 
     private boolean isNADPHSet(Set<Metabolite> onlyInB) {
-        return isSetWithProtons(onlyInB,nadphDetector,nadpDetector);
+        return nadphSetDet.isSet(onlyInB);
     }
 
     private boolean isNADHSet(Set<Metabolite> onlyInA) {
-        return isSetWithProtons(onlyInA, nadhDetector, nadDetector);
+        return nadhSetDet.isSet(onlyInA);
     }
 
-    private boolean isSetWithProtons(Set<Metabolite> mols,
-                                     MoleculeDetector detector1, MoleculeDetector detector2) {
-        boolean mol1=false;
-        boolean mol2=false;
-        boolean others=false;
 
-        for (Metabolite met : mols) {
-            if (detector1.isMolecule(met))
-                mol1 = true;
-            else if (detector2.isMolecule(met))
-                mol2 = true;
-            else if (!met.getName().equalsIgnoreCase("h+"))
-                others = true;
-        }
-
-        return mol1 && mol2 && !others;
-
-    }
-
-    /**
-     * Returns a set of molecules that participate in rxn A but not in rxn B. Currently direction is neglected.
-     *
-     * @param rxnA
-     * @param rxnB
-     * @return molecules present in A but not in B.
-     */
-    private Set<Metabolite> onlyInFirstRXN(MetabolicReaction rxnA, MetabolicReaction rxnB) {
-        Set<Metabolite> onlyInFirst = new HashSet<Metabolite>();
-        for (MetabolicParticipant part : rxnA.getParticipants()) {
-            onlyInFirst.add(part.getMolecule());
-        }
-        for (MetabolicParticipant partB : rxnB.getParticipants()) {
-            onlyInFirst.remove(partB.getMolecule());
-        }
-        return onlyInFirst;
-    }
 }

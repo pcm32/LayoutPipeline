@@ -39,6 +39,7 @@ public class NADRelatedReconsMotifCleaner implements ReconsMotifCleaner {
         rxnMotDet = new SameMainReactProdMotifDet(recons);
         Set<MetabolicReaction> rxns = rxnMotDet.nextCompliantGroup();
         NADPHReactionSReducer reducer = new NADPHReactionSReducer();
+        NADReactionMerger merger = new NADReactionMerger(recons);
         Set<MetabolicReaction> toRm = new HashSet<MetabolicReaction>();
         while(rxns!=null) {
             Set<MetabolicReaction> auxToRM = reducer.reduceReactions(rxns);
@@ -48,6 +49,7 @@ public class NADRelatedReconsMotifCleaner implements ReconsMotifCleaner {
                  * TODO : We can try integrating here the parallel NADPH and NADH reactions into a single NAD(P)H
                  * If reactions for such integration are present, they should be available in the rxns Set.
                  */
+                toRm.addAll(merger.mergeReactions(rxns));
             }
             rxns = rxnMotDet.nextCompliantGroup();
         }

@@ -1,6 +1,7 @@
 package uk.ac.ebi.pamela.layoutpipeline.detection.nad;
 
 import uk.ac.ebi.mdk.domain.entity.Metabolite;
+import uk.ac.ebi.mdk.domain.entity.MetaboliteImpl;
 import uk.ac.ebi.mdk.domain.identifier.*;
 import uk.ac.ebi.pamela.layoutpipeline.detection.AbstractMoleculeDetector;
 import uk.ac.ebi.pamela.layoutpipeline.detection.MoleculeDetector;
@@ -26,4 +27,7 @@ public class NAD_P_Detector extends AbstractMoleculeDetector implements Molecule
         this.names.add("nad(p)+");
     }
 
+    public Metabolite getMetabolite() {
+        return new MetaboliteImpl(new ChEBIIdentifier("CHEBI:25524"),"NAD(P)+","NAD(P)+");
+    }
 }

@@ -51,9 +51,9 @@ public class SameMainReactProdMotifDet extends AbstractReactionMotifDetector imp
 
             List<Metabolite> products = new ArrayList<Metabolite>();
             for (MetabolicParticipant prodPart : rxn.getProducts()) {
-                if(prodPart.isSideCompound())
-                    continue;
-                else
+                //if(prodPart.isSideCompound())
+                //    continue;
+                //else
                     products.add(prodPart.getMolecule());
             }
 

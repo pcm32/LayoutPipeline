@@ -1,5 +1,7 @@
 package uk.ac.ebi.pamela.layoutpipeline.detection.nad;
 
+import uk.ac.ebi.mdk.domain.entity.Metabolite;
+import uk.ac.ebi.mdk.domain.entity.MetaboliteImpl;
 import uk.ac.ebi.mdk.domain.identifier.*;
 import uk.ac.ebi.pamela.layoutpipeline.detection.AbstractMoleculeDetector;
 import uk.ac.ebi.pamela.layoutpipeline.detection.MoleculeDetector;
@@ -23,5 +25,9 @@ public class NAD_P_HDetector extends AbstractMoleculeDetector implements Molecul
         this.chemIdents.add(BioCycChemicalIdentifier.meta("NADH-P-OR-NOP"));
         this.names = new LinkedList<String>();
         this.names.add("nad(p)h");
+    }
+
+    public Metabolite getMetabolite() {
+        return new MetaboliteImpl(new ChEBIIdentifier("CHEBI:13392"),"NAD(P)H","NAD(P)H");
     }
 }
