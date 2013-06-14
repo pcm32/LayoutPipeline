@@ -60,9 +60,13 @@ public class PAMELAPipelineExec implements Runnable {
         DataSetProvider.loadPropsForCurrentSchema();
         this.selector = new NewestUnifiedDataSetSelector();
         this.depth = depth;
-        this.outPath = outputPath;     
-        //this.layouterAlgorithm = new SBWAutoLayouterAlgorithm("/Users/pmoreno/Documents/Projects/MTBL/Layout/Test/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        this.layouterAlgorithm = new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""));
+        this.outPath = outputPath;
+        SBWAutoLayouterAlgorithmOptions optionLayout = new SBWAutoLayouterAlgorithmOptions();
+        optionLayout.setGravityFactor(120);
+        optionLayout.setMagnetism(true);
+        //optionLayout.setBoundary(true);
+        //optionLayout.setGrid(true);
+        this.layouterAlgorithm = new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""),optionLayout);
         SBWRendererOptions opts = new SBWRendererOptions();
         opts.setOutputFormat(SBWRendererOptions.Format.png);
         //this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe",opts);
@@ -96,9 +100,9 @@ public class PAMELAPipelineExec implements Runnable {
     }
     
     public static void main(String[] args) throws IOException, SQLException {
-        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, "/tmp/TestPamelaLayout");        
-        //exec.setQuery(new SimpleOrgMolQuery("CHEBI:17737", "9606"));
-        exec.setQuery(new SimpleOrgMolQuery("CHEBI:18095", "9606"));
+        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, "/tmp/TestPamelaLayout/");
+        exec.setQuery(new SimpleOrgMolQuery("CHEBI:17737", "9606"));
+        //exec.setQuery(new SimpleOrgMolQuery("CHEBI:17115", "9606"));
         exec.run();
         exec.freeResources();
     }
