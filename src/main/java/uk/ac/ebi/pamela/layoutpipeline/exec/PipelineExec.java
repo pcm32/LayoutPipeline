@@ -100,6 +100,6 @@ public class PipelineExec {
     }
 
     private String createOuputFileNamePrefix(int i) {
-        return imageOutputPath+query.getChemicalIdentifier().toString()+"_"+query.getOrganismIdentifier().toString()+"_"+i;
+        return imageOutputPath+query.getChemicalIdentifier().toString().replaceAll(":","_")+"_"+query.getOrganismIdentifier().toString()+"_"+i;
     }
 }
