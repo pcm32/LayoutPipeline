@@ -98,6 +98,11 @@ public class SBWRenderer implements LayoutRenderer {
 
         this.outputFilePrefix = outputFilePrefix;
 
+        if(sbmlWithLayout.getModel().getNumReactions()==0) {
+            LOGGER.info("No reactions found for this set up");
+            return;
+        }
+
         // Test the environment is setup properly:
         if (!testSetup(pathToRendererEXE)){
             LOGGER.error("System is not properly setup. Either mono is not installed or Renderer EXE path is wrong. See log.");
@@ -112,8 +117,6 @@ public class SBWRenderer implements LayoutRenderer {
 
         // Set the output directory to the temporary directory...
         options.setDirectoryToSaveTo(outputFilePrefix);
-
-        SBMLDocument output = null;
 
         // Save the SBMLDocument (without any layout information) in the filesystem to use it in the command line
         try {
