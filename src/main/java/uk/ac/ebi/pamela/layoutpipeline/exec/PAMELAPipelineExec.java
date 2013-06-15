@@ -35,6 +35,7 @@ import uk.ac.ebi.pamela.layoutpipeline.bwh.NewestUnifiedDataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.detection.autorxn.AutoRxnReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.detection.nad.NADRelatedReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
+import uk.ac.ebi.pamela.layoutpipeline.utils.ReactionRecursionDepthMonitor;
 
 /**
  * @name    PAMELAPipelineExec
@@ -81,7 +82,7 @@ public class PAMELAPipelineExec implements Runnable {
     public void setQuery(Query query) {
         this.query = query;
         try {
-        this.rxnRetriever = new PAMELAReactionListRetriever(selector, query.getOrganismIdentifier(), depth);
+            this.rxnRetriever = new PAMELAReactionListRetriever(selector, query.getOrganismIdentifier(), depth);
         } catch(Exception e) {
           throw new RuntimeException("Could not start PAMELAReactionListRetriever", e);
         } 
