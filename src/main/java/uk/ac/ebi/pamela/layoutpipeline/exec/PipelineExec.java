@@ -17,8 +17,11 @@
 
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.google.common.io.Files;
 import org.apache.log4j.Logger;
 import org.sbml.jsbml.SBMLDocument;
 import uk.ac.ebi.mdk.domain.entity.DefaultEntityFactory;
@@ -75,6 +78,9 @@ public class PipelineExec {
         this.sbmlVersion = sbmlVersion;
         this.imageOutputPath = imageOutputPath;
         this.reconsCleaners = new LinkedList<ReconsMotifCleaner>();
+        File outputDir = new File(imageOutputPath);
+        if(!outputDir.isDirectory())
+            outputDir.mkdir();
     }
 
     public void addReconstructionCleaners(ReconsMotifCleaner cleaner) {
