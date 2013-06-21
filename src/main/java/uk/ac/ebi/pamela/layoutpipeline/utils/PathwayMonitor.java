@@ -20,9 +20,6 @@ package uk.ac.ebi.pamela.layoutpipeline.utils;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pamela.layoutpipeline.Query;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -35,15 +32,15 @@ import java.io.IOException;
  * number of reactions is reached, then the depth could be reduced, to have fewer reactions and improve visualization.
  *
  */
-public class ReactionRecursionDepthMonitor extends AbstractMonitor<Integer> {
+public class PathwayMonitor extends AbstractMonitor<String> {
 
-    private static final Logger LOGGER = Logger.getLogger(ReactionRecursionDepthMonitor.class);
+    private static final Logger LOGGER = Logger.getLogger(PathwayMonitor.class);
 
-    private static ReactionRecursionDepthMonitor INSTANCE;
+    private static PathwayMonitor INSTANCE;
 
-    private ReactionRecursionDepthMonitor() {
+    private PathwayMonitor() {
         super();
-        this.fileName = "depth.txt";
+        this.fileName = "pathway.txt";
     }
 
     @Override
@@ -51,19 +48,19 @@ public class ReactionRecursionDepthMonitor extends AbstractMonitor<Integer> {
         return fileName;
     }
 
-    public static synchronized ReactionRecursionDepthMonitor getMonitor() {
+    public static synchronized PathwayMonitor getMonitor() {
         if(INSTANCE==null) {
-            INSTANCE = new ReactionRecursionDepthMonitor();
+            INSTANCE = new PathwayMonitor();
         }
         return INSTANCE;
     }
 
     @Override
-    public synchronized void register(Query query, Integer depth, int index) {
+    public synchronized void register(Query query, String pathway, int index) {
         try {
             if(active) {
-                writer.write(query.getChemicalIdentifier().toString()+"\t"
-                        +query.getOrganismIdentifier().toString()+"\t"+index+"\t"+depth+"\n");
+                writer.write(query.getChemicalIdentifier().toString()+
+                        "\t"+query.getOrganismIdentifier().toString()+"\t"+index+"\t"+pathway+"\n");
             }
         } catch (IOException e) {
             LOGGER.error("Problems writing to "+getFileName()+" file",e);
