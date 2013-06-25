@@ -24,6 +24,12 @@ public abstract class AbstractMonitor<T> {
     String fileName;
 
 
+    /**
+     * Produces the file name (and not the complete path) of the file where the monitor is writing
+     * it's output.
+     *
+     * @return the file name (not the complete path) where output is written
+     */
     abstract String getFileName();
 
     /**

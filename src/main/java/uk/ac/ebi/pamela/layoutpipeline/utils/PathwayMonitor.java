@@ -17,10 +17,13 @@
 
 package uk.ac.ebi.pamela.layoutpipeline.utils;
 
+import com.sri.biospice.warehouse.schema.DBID;
+import com.sri.biospice.warehouse.schema.object.Pathway;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pamela.layoutpipeline.Query;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,11 +31,11 @@ import java.io.IOException;
  * Date: 15/6/13
  * Time: 02:06
  *
- * The aim of this class is to register the depth used for each query. This is relevant since for each query, if a certain
- * number of reactions is reached, then the depth could be reduced, to have fewer reactions and improve visualization.
+ * The aim of this class is to register the pathways used by each query. This is relevant for metadata collection.
  *
+ * TODO rename to BWHPathwayMonitor.
  */
-public class PathwayMonitor extends AbstractMonitor<String> {
+public class PathwayMonitor extends AbstractMonitor<Pathway> {
 
     private static final Logger LOGGER = Logger.getLogger(PathwayMonitor.class);
 
@@ -43,11 +46,20 @@ public class PathwayMonitor extends AbstractMonitor<String> {
         this.fileName = "pathway.txt";
     }
 
+    /**
+     *  {@inheritDoc}
+     */
     @Override
     String getFileName() {
         return fileName;
     }
 
+    /**
+     * Retrieves the single instance of the monitor. The only instance needs to be first initialized by executing
+     * {@link #setOutputPath(String)}.
+     *
+     * @return the current instance of the monitor.
+     */
     public static synchronized PathwayMonitor getMonitor() {
         if(INSTANCE==null) {
             INSTANCE = new PathwayMonitor();
@@ -55,12 +67,21 @@ public class PathwayMonitor extends AbstractMonitor<String> {
         return INSTANCE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public synchronized void register(Query query, String pathway, int index) {
+    public synchronized void register(Query query, Pathway pathway, int index) {
         try {
             if(active) {
+                Iterator<DBID> itXrefs = DBID.loadDBIDsV2(pathway.getWID()).iterator();
+                String extIdent = "null";
+                if(itXrefs.hasNext()) {
+                    DBID dbid = itXrefs.next();
+                    extIdent = dbid.getXID();
+                }
                 writer.write(query.getChemicalIdentifier().toString()+
-                        "\t"+query.getOrganismIdentifier().toString()+"\t"+index+"\t"+pathway+"\n");
+                        "\t"+query.getOrganismIdentifier().toString()+"\t"+index+"\t"+pathway.getName()+"\t"+extIdent+"\t"+pathway.getWID()+"\n");
             }
         } catch (IOException e) {
             LOGGER.error("Problems writing to "+getFileName()+" file",e);
