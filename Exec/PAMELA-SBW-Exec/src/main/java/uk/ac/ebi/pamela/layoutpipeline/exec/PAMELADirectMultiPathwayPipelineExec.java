@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.metabolomes.biowh.BiowhPooledConnection;
 import uk.ac.ebi.metabolomes.biowh.DataSetProvider;
+import uk.ac.ebi.pamela.layoutpipeline.*;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.NewestUnifiedDataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.detection.autorxn.AutoRxnReconsMotifCleaner;
@@ -12,6 +13,8 @@ import uk.ac.ebi.pamela.layoutpipeline.detection.nad.NADRelatedReconsMotifCleane
 import uk.ac.ebi.pamela.layoutpipeline.pathway.PAMELAPathwayFileNamer;
 import uk.ac.ebi.pamela.layoutpipeline.pathway.PathwayFileNamer;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWAlgorithmPrefsSetter;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWRendererPrefsSetter;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,13 +55,13 @@ public class PAMELADirectMultiPathwayPipelineExec implements Runnable{
         //optionLayout.setGrid(true);
         this.layouterAlgorithm =
                 new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(
-                        PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""),optionLayout);
+                        SBWAlgorithmPrefsSetter.SBWAlgPrefsField.pathToSaveLayoutEXE, ""),optionLayout);
         SBWRendererOptions opts = new SBWRendererOptions();
         opts.setOutputFormat(SBWRendererOptions.Format.png);
         //this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe",opts);
         this.renderer =
                 new SBWRenderer(PropertiesUtil.getPreference(
-                        PropertiesUtil.PrefNames.pathToRendererEXE,""),opts);
+                        SBWRendererPrefsSetter.SBWRendererPrefsField.pathToRendererEXE,""),opts);
         this.pathwayFileNamer = new PAMELAPathwayFileNamer(); // the rendered class will add the adequate suffix.
     }
 

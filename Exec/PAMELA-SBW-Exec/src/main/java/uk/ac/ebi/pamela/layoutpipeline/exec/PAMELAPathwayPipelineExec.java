@@ -20,12 +20,16 @@ package uk.ac.ebi.pamela.layoutpipeline.exec;
 import com.sri.biospice.warehouse.database.PooledWarehouseManager;
 import uk.ac.ebi.metabolomes.biowh.BiowhPooledConnection;
 import uk.ac.ebi.metabolomes.biowh.DataSetProvider;
+import uk.ac.ebi.pamela.layoutpipeline.*;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.NewestUnifiedDataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.detection.autorxn.AutoRxnReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.detection.nad.NADRelatedReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.pathway.PAMELAPathwayNoFlightChecker;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PathwayMonitor;
+import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWAlgorithmPrefsSetter;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWRendererPrefsSetter;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -60,13 +64,13 @@ public class PAMELAPathwayPipelineExec implements Runnable {
         //optionLayout.setGrid(true);
         this.layouterAlgorithm =
                 new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(
-                        PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""),optionLayout);
+                        SBWAlgorithmPrefsSetter.SBWAlgPrefsField.pathToSaveLayoutEXE, ""),optionLayout);
         SBWRendererOptions opts = new SBWRendererOptions();
         opts.setOutputFormat(SBWRendererOptions.Format.png);
         //this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe",opts);
         this.renderer =
                 new SBWRenderer(PropertiesUtil.getPreference(
-                        PropertiesUtil.PrefNames.pathToRendererEXE,""),opts);
+                        SBWRendererPrefsSetter.SBWRendererPrefsField.pathToRendererEXE,""),opts);
     }
     
     /**

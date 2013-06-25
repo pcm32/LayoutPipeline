@@ -36,6 +36,8 @@ import uk.ac.ebi.pamela.layoutpipeline.detection.autorxn.AutoRxnReconsMotifClean
 import uk.ac.ebi.pamela.layoutpipeline.detection.nad.NADRelatedReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
 import uk.ac.ebi.pamela.layoutpipeline.utils.ReactionRecursionDepthMonitor;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWAlgorithmPrefsSetter;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWRendererPrefsSetter;
 
 /**
  * @name    PAMELAPipelineExec
@@ -67,11 +69,11 @@ public class PAMELAPipelineExec implements Runnable {
         optionLayout.setMagnetism(true);
         //optionLayout.setBoundary(true);
         //optionLayout.setGrid(true);
-        this.layouterAlgorithm = new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""),optionLayout);
+        this.layouterAlgorithm = new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(SBWAlgorithmPrefsSetter.SBWAlgPrefsField.pathToSaveLayoutEXE, ""),optionLayout);
         SBWRendererOptions opts = new SBWRendererOptions();
         opts.setOutputFormat(SBWRendererOptions.Format.png);
         //this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe",opts);
-        this.renderer = new SBWRenderer(PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToRendererEXE,""),opts);
+        this.renderer = new SBWRenderer(PropertiesUtil.getPreference(SBWRendererPrefsSetter.SBWRendererPrefsField.pathToRendererEXE,""),opts);
     }
     
     /**

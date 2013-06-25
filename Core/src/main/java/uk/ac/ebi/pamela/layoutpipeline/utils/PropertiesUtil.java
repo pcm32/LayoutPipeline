@@ -35,22 +35,6 @@ public class PropertiesUtil {
     static Preferences prefs;
     private static final Logger LOGGER = Logger.getLogger(PropertiesUtil.class);
 
-    public enum PrefNames {
-
-        pathToRendererEXE("Please enter the path to SBW SBML LayoutReader.exe"),
-        pathToSaveLayoutEXE("Please enter the path to SBW SaveLayout.exe");
-        
-        String msg;
-
-        PrefNames(String msg) {
-            this.msg = msg;
-        }
-
-        String getMessage() {
-            return msg;
-        }
-    }
-
     private PropertiesUtil() {
     }
 
@@ -62,7 +46,7 @@ public class PropertiesUtil {
         }
         return props.getProperty(propertyName);
     }
-    
+
     static public String getPreference(String prefName, String defaultValue) {
         // If there isn't any preference...load them
         if (prefs == null) {
@@ -70,15 +54,37 @@ public class PropertiesUtil {
         }
         return prefs.get(prefName, defaultValue);
     }
-    
-    static public String getPreference(RheaDBConnectionSetter.RheaDBField field) {
-        return getPreference(field.toString(), "");
+
+    static public String getPreference(MessageableField prefName, String defaultValue) {
+        if(prefs == null) {
+            readPreferences();
+        }
+        return getPreference(prefName.getField(),defaultValue);
     }
 
-    static public String getPreference(PrefNames prefName, String defaultValue) {
-
-        return getPreference(prefName.toString(), defaultValue);
+    static public String getPreference(MessageableField prefName) {
+        if(prefs == null) {
+            readPreferences();
+        }
+        return getPreference(prefName.getField(),"");
     }
+
+    /**
+     * @deprecated use {@link #getPreference(Enum)}
+     */
+//    @Deprecated
+//    static public String getPreference(RheaDBConnectionSetter.RheaDBField field) {
+//        return getPreference(field.toString(), "");
+//    }
+
+    /**
+     * @deprecated use
+     */
+//    @Deprecated
+//    static public String getPreference(PrefNames prefName, String defaultValue) {
+//
+//        return getPreference(prefName.toString(), defaultValue);
+//    }
 
     static private void readProperties() {
 
@@ -103,19 +109,19 @@ public class PropertiesUtil {
         prefs = Preferences.userRoot().node(PropertiesUtil.class.getName());
     }
 
-    static public void setPreference(String preferenceName, String value) throws IOException, BackingStoreException {
+    static public void setPreference(MessageableField field, String value) throws IOException, BackingStoreException {
         prefs = Preferences.userRoot().node(PropertiesUtil.class.getName());
-        prefs.put(preferenceName, value);
+        prefs.put(field.getField(), value);
         prefs.flush();
     }
 
-    public static void main(String[] args) throws IOException, BackingStoreException {
-
-        for (PrefNames prefNames : PrefNames.values()) {
-            System.out.println(prefNames.getMessage());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String saveLayoutPath = reader.readLine();
-            setPreference(prefNames.toString(), saveLayoutPath);
-        }
-    }
+//    public static void main(String[] args) throws IOException, BackingStoreException {
+//
+//        for (PrefNames prefNames : PrefNames.values()) {
+//            System.out.println(prefNames.getMessage());
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//            String saveLayoutPath = reader.readLine();
+//            setPreference(prefNames, saveLayoutPath);
+//        }
+//    }
 }

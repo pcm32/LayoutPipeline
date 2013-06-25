@@ -33,7 +33,7 @@ import java.util.prefs.BackingStoreException;
  */
 public class RheaDBConnectionSetter {
     
-    public enum RheaDBField {
+    public enum RheaDBField implements MessageableField {
         rheaUsername("rhea.username","Enter the Rhea user name:"), 
         rheaPassword("rhea.password","Enter the Rhea password"), 
         rheUrl("rhea.url", "Enter the Rhea URL:"),
@@ -46,7 +46,7 @@ public class RheaDBConnectionSetter {
             this.field = field;
             this.msg = msg;
         }
-        
+
         @Override
         public String toString() {
             return field;
@@ -55,7 +55,12 @@ public class RheaDBConnectionSetter {
         public String getMessage() {
             return msg;
         }
-        
+
+        @Override
+        public String getField() {
+            return field;
+        }
+
     }
 
     public static void main(String[] args) throws IOException, BackingStoreException {
@@ -69,7 +74,7 @@ public class RheaDBConnectionSetter {
             }
             System.out.println(rheaField.getMessage());
             String value = reader.readLine();
-            PropertiesUtil.setPreference(rheaField.toString(), value);
+            PropertiesUtil.setPreference(rheaField, value);
         }
         
     }
