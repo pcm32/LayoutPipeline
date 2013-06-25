@@ -91,15 +91,8 @@ public class SBWRendererTest {
     public void testMonoTest(){
 
 
-        assertTrue(SBWAutoLayouterAlgorithm.testMono());
+        assertTrue(SBWRenderer.testMono());
 
     }
 
-    @Test
-    public void testLayouterTest(){
-
-
-        assertTrue(SBWAutoLayouterAlgorithm.testLayouter(props.getProperty("pathToSaveLayoutEXE")));
-
-    }
 }

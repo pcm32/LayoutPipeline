@@ -1,9 +1,11 @@
 package uk.ac.ebi.pamela.layoutpipeline.exec;
 
 import com.google.common.io.Files;
-import org.junit.Test;
 import uk.ac.ebi.pamela.layoutpipeline.*;
+import uk.ac.ebi.pamela.layoutpipeline.RheaReactionListRetriever;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWAlgorithmPrefsSetter;
+import uk.ac.ebi.pamela.layoutpipeline.utils.SBWRendererPrefsSetter;
 
 /**
  * User: conesa
@@ -11,16 +13,16 @@ import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
  * Time: 14:56
  */
 public class PipelineExecRheaTest {
-    @Test
-    public void testRun() throws Exception {
+
+    public static void main() throws Exception {
 
         Query query = new SimpleOrgMolQuery("CHEBI:57972","303");
 
         String imageOutputPath = Files.createTempDir().getAbsolutePath();
 
         //String layoutExe = PropertiesUtil.getPreference("pathToSaveLayoutEXE","/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        String layoutExe = PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE,"/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        String renderExe = PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToRendererEXE , "/Applications/SBW/lib/SBMLLayoutReader.exe");
+        String layoutExe = PropertiesUtil.getPreference(SBWAlgorithmPrefsSetter.SBWAlgPrefsField.pathToSaveLayoutEXE,"/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
+        String renderExe = PropertiesUtil.getPreference(SBWRendererPrefsSetter.SBWRendererPrefsField.pathToRendererEXE , "/Applications/SBW/lib/SBMLLayoutReader.exe");
 
         // No specie information so far...
         ReactionListRetriever retriever = new RheaReactionListRetriever();
