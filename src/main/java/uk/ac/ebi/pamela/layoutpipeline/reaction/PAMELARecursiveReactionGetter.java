@@ -47,7 +47,9 @@ public class PAMELARecursiveReactionGetter extends AbstractRecursiveReactionGett
     
     private BiochemicalReactionSetProvider provider;
     
-    public PAMELARecursiveReactionGetter(DataSet ds, Taxonomy orgIdentifier,Integer depth, CurrencyCompoundDecider<Chemical,Reaction> currencyDecider, MainCompoundDecider<Chemical,Reaction> mainCompDecider) {
+    public PAMELARecursiveReactionGetter(DataSet ds, Taxonomy orgIdentifier,Integer depth,
+                                         CurrencyCompoundDecider<Chemical,Reaction> currencyDecider,
+                                         MainCompoundDecider<Chemical,Reaction> mainCompDecider) {
         super(depth,currencyDecider,mainCompDecider);
         this.provider = BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
         this.provider.setSpecieForProvider(orgIdentifier.getTaxon());

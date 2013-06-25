@@ -85,7 +85,7 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
                     if(chemsWithId.size()>1)
                         LOGGER.warn("Retrieving reactions for chemical WID "+chemical.getWID());
                     reactions.addAll(rxnGetter.getReactions(chemical));
-                    ReactionRecursionDepthMonitor.register(query,rxnGetter.getLastDepthUsed());
+                    ReactionRecursionDepthMonitor.getMonitor().register(query,rxnGetter.getLastDepthUsed(),0);
                 }
             } catch (SQLException e) {
                 LOGGER.error("Problems retrieving reactions : ",e);

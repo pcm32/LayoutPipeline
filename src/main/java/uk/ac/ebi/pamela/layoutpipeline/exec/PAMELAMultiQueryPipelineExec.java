@@ -41,7 +41,7 @@ public class PAMELAMultiQueryPipelineExec {
         String pathToChemicalIdentifierList = args[2];
 
         PAMELAPipelineExec exec = new PAMELAPipelineExec(3, pathToOut);
-        ReactionRecursionDepthMonitor.setOutputPath(pathToOut);
+        ReactionRecursionDepthMonitor.getMonitor().setOutputPath(pathToOut);
         BufferedReader reader = new BufferedReader(new FileReader(pathToChemicalIdentifierList));
 
         String id;
@@ -60,6 +60,6 @@ public class PAMELAMultiQueryPipelineExec {
         Float speed = (count + 0f) / ((System.currentTimeMillis() - startTime) / 1000);
         System.out.println("Done " + count + " identifiers " + speed + " [idents/sec]");
         exec.freeResources();
-        ReactionRecursionDepthMonitor.close();
+        ReactionRecursionDepthMonitor.getMonitor().close();
     }
 }

@@ -27,6 +27,7 @@ import uk.ac.ebi.mdk.domain.entity.Reconstruction;
 import uk.ac.ebi.mdk.domain.entity.ReconstructionImpl;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicParticipant;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.pamela.layoutpipeline.reaction.RedundantMetabProcessor;
 
 /**
  * @name    AbstractReactionListRetriever
@@ -38,16 +39,16 @@ import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
  *
  */
 public abstract class AbstractReactionListRetriever {
-    
-    Map<UUID,Metabolite> generatedMetabolites;
 
+    RedundantMetabProcessor proc;
     abstract Iterable<MetabolicReaction> getReactions(Query query);
+
 
     public List<Reconstruction> getReactionsAsReconstructions(Query query) {
         Reconstruction rec = new ReconstructionImpl();
-        this.generatedMetabolites = new HashMap<UUID, Metabolite>();
+        this.proc = new RedundantMetabProcessor();
         for (MetabolicReaction metReaction : getReactions(query)) {
-            processRedunantMetabolites(metReaction);
+            proc.processRedundantMetabolites(metReaction);
             rec.addReaction(metReaction);
         }
         List<Reconstruction> recs = new ArrayList<Reconstruction>();
@@ -58,21 +59,5 @@ public abstract class AbstractReactionListRetriever {
         return recs;
     }
 
-    /**
-     * Takes the metabolites participating in a reaction, checks whether they have been already generated for the
-     * current reconstruction. If the metabolites (same UUID) have been already generated, then newer one is replaced by
-     * the existing one.
-     * 
-     * @param metReaction 
-     */
-    private void processRedunantMetabolites(MetabolicReaction metReaction) {
-        for (MetabolicParticipant metabolicParticipant : metReaction.getParticipants()) {
-            UUID newMolUuid = metabolicParticipant.getMolecule().uuid();
-            if(generatedMetabolites.containsKey(newMolUuid)) {
-                metabolicParticipant.setMolecule(generatedMetabolites.get(newMolUuid));
-            } else {
-                generatedMetabolites.put(newMolUuid, metabolicParticipant.getMolecule());
-            }
-        }
-    }
+
 }
