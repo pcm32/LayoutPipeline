@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import uk.ac.ebi.mdk.domain.entity.reaction.MetabolicReaction;
+import uk.ac.ebi.pamela.layoutpipeline.utils.ReactionRecursionDepthMonitor;
 
 /**
  * @name AbstractRecursiveReactionGetter
@@ -41,6 +42,9 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     private CurrencyCompoundDecider<C, R> currencyDec;
     private MainCompoundDecider<C, R> mainCompDec;
     private Integer depth;
+    private Integer maxReactions;
+    private Integer lastDepthUsed;
+    private Integer minDepth;
 
     private static final Logger LOGGER = Logger.getLogger(AbstractRecursiveReactionGetter.class.getName());
 
@@ -48,6 +52,35 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
         this.depth = depth;
         this.currencyDec = currencyDec;
         this.mainCompDec = mainCompDec;
+    }
+
+    /**
+     * Sets the maximum reactions that the recursion should get. It also sets the minimum depth to one unit below the current
+     * depth as a default.
+     *
+     * @param maxReactions
+     */
+    public void setMaxReactions(Integer maxReactions) {
+        this.maxReactions = maxReactions;
+        this.minDepth = depth - 1;
+    }
+
+    /**
+     * Sets a minimum depth for the recursion of reactions.
+     *
+     * @param minDepth
+     */
+    public void setMinDepth(Integer minDepth) {
+        this.minDepth = minDepth;
+    }
+
+    /**
+     * Gets the depth used for the last reaction retrieval operation.
+     *
+     * @return last depth used.
+     */
+    public Integer getLastDepthUsed() {
+        return this.lastDepthUsed;
     }
 
     /**
@@ -61,7 +94,19 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     public Collection<MetabolicReaction> getReactions(C chem) throws SQLException {
         this.visitedChemicals = new HashSet<C>();
         this.visitedReactions = new HashSet<R>();
-        return getReactions(chem, depth);
+        this.lastDepthUsed = depth;
+        Collection<MetabolicReaction> reactions = getReactions(chem, depth);
+        if(maxReactions!=null && reactions.size()>maxReactions) {
+            int depthUsed = depth;
+            while (reactions.size()>maxReactions && depthUsed > minDepth) {
+                depthUsed--;
+                this.visitedChemicals.clear();
+                this.visitedReactions.clear();
+                this.lastDepthUsed = depthUsed;
+                reactions = getReactions(chem,depthUsed);
+            }
+        }
+        return reactions;
     }
 
     private Collection<MetabolicReaction> getReactions(C chem, Integer depth) throws SQLException {

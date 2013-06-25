@@ -32,7 +32,10 @@ import uk.ac.ebi.pamela.layoutpipeline.SBWRendererOptions;
 import uk.ac.ebi.pamela.layoutpipeline.SimpleOrgMolQuery;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.NewestUnifiedDataSetSelector;
+import uk.ac.ebi.pamela.layoutpipeline.detection.autorxn.AutoRxnReconsMotifCleaner;
+import uk.ac.ebi.pamela.layoutpipeline.detection.nad.NADRelatedReconsMotifCleaner;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
+import uk.ac.ebi.pamela.layoutpipeline.utils.ReactionRecursionDepthMonitor;
 
 /**
  * @name    PAMELAPipelineExec
@@ -58,9 +61,13 @@ public class PAMELAPipelineExec implements Runnable {
         DataSetProvider.loadPropsForCurrentSchema();
         this.selector = new NewestUnifiedDataSetSelector();
         this.depth = depth;
-        this.outPath = outputPath;     
-        //this.layouterAlgorithm = new SBWAutoLayouterAlgorithm("/Users/pmoreno/Documents/Projects/MTBL/Layout/Test/AutoLayoutWithoutLibSBML/SaveLayout.exe");
-        this.layouterAlgorithm = new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""));
+        this.outPath = outputPath;
+        SBWAutoLayouterAlgorithmOptions optionLayout = new SBWAutoLayouterAlgorithmOptions();
+        optionLayout.setGravityFactor(120);
+        optionLayout.setMagnetism(true);
+        //optionLayout.setBoundary(true);
+        //optionLayout.setGrid(true);
+        this.layouterAlgorithm = new SBWAutoLayouterAlgorithm(PropertiesUtil.getPreference(PropertiesUtil.PrefNames.pathToSaveLayoutEXE, ""),optionLayout);
         SBWRendererOptions opts = new SBWRendererOptions();
         opts.setOutputFormat(SBWRendererOptions.Format.png);
         //this.renderer = new SBWRenderer("/Applications/SBW/lib/SBMLLayoutReader.exe",opts);
@@ -75,7 +82,7 @@ public class PAMELAPipelineExec implements Runnable {
     public void setQuery(Query query) {
         this.query = query;
         try {
-        this.rxnRetriever = new PAMELAReactionListRetriever(selector, query.getOrganismIdentifier(), depth);
+            this.rxnRetriever = new PAMELAReactionListRetriever(selector, query.getOrganismIdentifier(), depth);
         } catch(Exception e) {
           throw new RuntimeException("Could not start PAMELAReactionListRetriever", e);
         } 
@@ -84,6 +91,8 @@ public class PAMELAPipelineExec implements Runnable {
     
     public void run() {
         PipelineExec exec = new PipelineExec(query, rxnRetriever, layouterAlgorithm, renderer, 2, 3, outPath);
+        exec.addReconstructionCleaners(new NADRelatedReconsMotifCleaner());
+        exec.addReconstructionCleaners(new AutoRxnReconsMotifCleaner());
         exec.run();
     }
     
@@ -92,8 +101,9 @@ public class PAMELAPipelineExec implements Runnable {
     }
     
     public static void main(String[] args) throws IOException, SQLException {
-        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, "/tmp/TestPamelaLayout");        
+        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, "/tmp/TestPamelaLayout/");
         exec.setQuery(new SimpleOrgMolQuery("CHEBI:17737", "9606"));
+        //exec.setQuery(new SimpleOrgMolQuery("CHEBI:17115", "9606"));
         exec.run();
         exec.freeResources();
     }

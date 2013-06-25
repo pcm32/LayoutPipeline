@@ -16,6 +16,7 @@
  */
 package uk.ac.ebi.pamela.layoutpipeline;
 
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pamela.layoutpipeline.bwh.DataSetSelector;
 import com.sri.biospice.warehouse.schema.DataSet;
 import com.sri.biospice.warehouse.schema.object.Chemical;
@@ -31,6 +32,7 @@ import uk.ac.ebi.pamela.layoutpipeline.reaction.BWHDummyMainCompDecider;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.CurrencyCompoundDecider;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.MainCompoundDecider;
 import uk.ac.ebi.pamela.layoutpipeline.reaction.PAMELARecursiveReactionGetter;
+import uk.ac.ebi.pamela.layoutpipeline.utils.ReactionRecursionDepthMonitor;
 import uk.ac.ebi.warehouse.util.ChemicalUtil;
 
 /**
@@ -43,6 +45,8 @@ import uk.ac.ebi.warehouse.util.ChemicalUtil;
  *
  */
 public class PAMELAReactionListRetriever extends AbstractReactionListRetriever implements ReactionListRetriever {
+
+    private static final Logger LOGGER = Logger.getLogger(PAMELAReactionListRetriever.class);
 
     private DataSet ds;
     private DataSetSelector dsSel;
@@ -66,20 +70,25 @@ public class PAMELAReactionListRetriever extends AbstractReactionListRetriever i
 
         // Search for chemical identifier in data set
         if (ds != null) {
-            //BiochemicalReactionSetProvider provider =
-            //        BioChemicalReactionSetProviderFactory.getBiochemicalReactionSetProvider(ds);
-
             // Get small molecule that has the provided Cross reference.
             try {
                 List<Chemical> chemsWithId = ChemicalUtil.getChemicalWithCrossReference(query.getChemicalIdentifier().getAccession(),
                         query.getChemicalIdentifier().getShortDescription(), ds.getWID());
 
                 PAMELARecursiveReactionGetter rxnGetter = new PAMELARecursiveReactionGetter(ds, query.getOrganismIdentifier(), reactionDepth, currencyDecider, mainCompoundDecider);
+                rxnGetter.setMaxReactions(30);
 
+                if(chemsWithId.size()>1) {
+                    LOGGER.warn("Retrieved more than one BWH Chemical for the defined query : "+query.getChemicalIdentifier().getAccession());
+                }
                 for (Chemical chemical : chemsWithId) {
+                    if(chemsWithId.size()>1)
+                        LOGGER.warn("Retrieving reactions for chemical WID "+chemical.getWID());
                     reactions.addAll(rxnGetter.getReactions(chemical));
+                    ReactionRecursionDepthMonitor.register(query,rxnGetter.getLastDepthUsed());
                 }
             } catch (SQLException e) {
+                LOGGER.error("Problems retrieving reactions : ",e);
             }
         }
 
