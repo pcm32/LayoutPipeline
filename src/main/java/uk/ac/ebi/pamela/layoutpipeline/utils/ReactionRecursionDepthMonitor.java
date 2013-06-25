@@ -35,63 +35,40 @@ import java.io.IOException;
  * number of reactions is reached, then the depth could be reduced, to have fewer reactions and improve visualization.
  *
  */
-public class ReactionRecursionDepthMonitor {
+public class ReactionRecursionDepthMonitor extends AbstractMonitor<Integer> {
 
     private static final Logger LOGGER = Logger.getLogger(ReactionRecursionDepthMonitor.class);
 
-    private static boolean active = false;
-    private static BufferedWriter writer;
+    private static ReactionRecursionDepthMonitor INSTANCE;
 
-    /**
-     * Sets the ouput path (directory) where the "depth.txt" file will be created, and where the record for each query
-     * will be written (the used depth in the end for each query). Calling this method activates the registration of data.
-     *
-     * @param path of directory where the depth.txt file will reside
-     */
-    public synchronized static void setOutputPath(String path) {
-        try {
-            active = true;
-            writer = new BufferedWriter(new FileWriter(path+File.separator+"depths.txt"));
-        } catch (IOException e) {
-            LOGGER.error("Problems opening depth.txt file for writing",e);
-            throw new RuntimeException();
-        } finally {
-            active = false;
-        }
+    private ReactionRecursionDepthMonitor() {
+        super();
+        this.fileName = "depth.txt";
     }
 
-    /**
-     * If the monitor is active (by calling previously {@link #setOutputPath(String)}, then the given depth is written
-     * to file for the given query.
-     *
-     * @param query
-     * @param depth
-     */
-    public synchronized static void register(Query query, Integer depth) {
+    @Override
+    String getFileName() {
+        return fileName;
+    }
+
+    public static synchronized ReactionRecursionDepthMonitor getMonitor() {
+        if(INSTANCE==null) {
+            INSTANCE = new ReactionRecursionDepthMonitor();
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public synchronized void register(Query query, Integer depth, int index) {
         try {
             if(active) {
-                writer.write(query.getChemicalIdentifier().toString()+"\t"+query.getOrganismIdentifier().toString()+"\t"+depth+"\n");
+                writer.write(query.getChemicalIdentifier().toString()+"\t"
+                        +query.getOrganismIdentifier().toString()+"\t"+index+"\t"+depth+"\n");
             }
         } catch (IOException e) {
-            LOGGER.error("Problems writing to depths.txt file",e);
+            LOGGER.error("Problems writing to "+getFileName()+" file",e);
         }
     }
-
-    /**
-     * Closes the file writer if it is not null.
-     */
-    public synchronized static void close() {
-        try {
-            if(writer!=null) {
-                writer.close();
-            }
-        } catch (IOException e) {
-            LOGGER.error("Could not close depth.txt");
-        }
-    }
-
-
-
 
 
 }
