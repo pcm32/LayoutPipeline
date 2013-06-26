@@ -102,6 +102,9 @@ public class PipelineExec {
             SBMLDocument docWLayout = layoutAlg.getLayoutedSBML(doc);
             layoutRend.produceRender(docWLayout, createOuputFileNamePrefix(i));
         }
+        if(recons.isEmpty()) {
+            LOGGER.info("No reactions found for : "+query.getChemicalIdentifier().getAccession()+"\t"+query.getOrganismIdentifier().getAccession());
+        }
 
     }
 

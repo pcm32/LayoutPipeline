@@ -36,19 +36,20 @@ import uk.ac.ebi.pamela.layoutpipeline.utils.ReactionRecursionDepthMonitor;
 public class PAMELAMultiQueryPipelineExec {
 
     public static void main(String[] args) throws IOException, SQLException {
-        String organismTaxId = args[0];
-        String pathToOut = args[1];
-        String pathToChemicalIdentifierList = args[2];
+        String pathToOut = args[0];
+        String pathToChemicalIdentifierList = args[1];
 
-        PAMELAPipelineExec exec = new PAMELAPipelineExec(3, pathToOut);
+        PAMELAPipelineExec exec = new PAMELAPipelineExec(2, pathToOut);
         ReactionRecursionDepthMonitor.getMonitor().setOutputPath(pathToOut);
         BufferedReader reader = new BufferedReader(new FileReader(pathToChemicalIdentifierList));
 
-        String id;
+        String line;
         int count = 0;
         Long startTime = System.currentTimeMillis();
-        while ((id = reader.readLine()) != null) {
-            ChEBIIdentifier identObj = new ChEBIIdentifier(id);
+        while ((line = reader.readLine()) != null) {
+            String[] tokens = line.split("\t");
+            ChEBIIdentifier identObj = new ChEBIIdentifier(tokens[0]);
+            String organismTaxId = tokens[1];
             exec.setQuery(new SimpleOrgMolQuery(identObj.getAccession(), organismTaxId));
             exec.run();
             count++;
