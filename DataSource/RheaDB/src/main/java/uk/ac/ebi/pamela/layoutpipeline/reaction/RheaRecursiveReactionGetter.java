@@ -27,6 +27,7 @@ import uk.ac.ebi.mdk.domain.identifier.SwissProtIdentifier;
 import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.mdk.domain.identifier.UniProtIdentifier;
 import uk.ac.ebi.mdk.service.query.orthology.UniProtECNumber2OrganismProteinService;
+import uk.ac.ebi.pamela.layoutpipeline.rhea.RheaConnectionManager;
 import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
 import uk.ac.ebi.rhea.domain.*;
 import uk.ac.ebi.rhea.mapper.MapperException;
@@ -65,31 +66,7 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
     }
 
     private void connectToRhea(){
-
-
-        // Get the connection properties
-        String rheaUrl = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheUrl);
-        String rheaUser = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheaUsername);
-        String rheaPassword = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheaPassword);
-        String rheaSchema = PropertiesUtil.getPreference(RheaDBConnectionSetter.RheaDBField.rheaSchema);
-
-        // We should externalise this.
-        try {
-            rheaConnection = DriverManager.getConnection(rheaUrl, rheaUser, rheaPassword);
-
-            if (rheaSchema !=null){
-
-                Statement stmt = rheaConnection.createStatement();
-                stmt.execute("alter session set current_schema = " + rheaSchema);
-                stmt.close();
-
-            }
-
-            LOGGER.info("Connection successful to rhea db.");
-        } catch (SQLException e) {
-            LOGGER.error("Can't connect to rhea database: " + e.getMessage());
-        }
-
+        this.rheaConnection = RheaConnectionManager.getConnection();
     }
     @Override
     public Collection<RheaReactionWrapper> getReactionsForChemical(Compound chemical) {

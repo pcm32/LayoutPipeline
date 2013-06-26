@@ -46,6 +46,11 @@ public class ReactionRecursionDepthMonitor extends AbstractMonitor<Integer> {
         this.fileName = "depth.txt";
     }
 
+    private ReactionRecursionDepthMonitor(String suffix) {
+        super();
+        this.fileName = suffix+"depth.txt";
+    }
+
     @Override
     String getFileName() {
         return fileName;
@@ -54,6 +59,20 @@ public class ReactionRecursionDepthMonitor extends AbstractMonitor<Integer> {
     public static synchronized ReactionRecursionDepthMonitor getMonitor() {
         if(INSTANCE==null) {
             INSTANCE = new ReactionRecursionDepthMonitor();
+        }
+        return INSTANCE;
+    }
+
+    /**
+     * This should be called for the first time with the suffix, otherwise it won't make any difference on the file
+     * written.
+     *
+     * @param suffix
+     * @return
+     */
+    public static synchronized ReactionRecursionDepthMonitor getMonitor(String suffix) {
+        if(INSTANCE==null) {
+            INSTANCE = new ReactionRecursionDepthMonitor(suffix);
         }
         return INSTANCE;
     }

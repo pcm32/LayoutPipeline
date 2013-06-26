@@ -45,10 +45,13 @@ public class RheaReactionListRetriever extends AbstractReactionListRetriever imp
     private static final String DEFAULT_CURRENCIES = PropertiesUtil.getProperty("defaultRheaCurrencies");
     private static final Logger LOGGER = Logger.getLogger( RheaReactionListRetriever.class );
 
-    public RheaReactionListRetriever() throws IOException, SQLException {
+    private Integer depth;
+
+    public RheaReactionListRetriever(Integer depth) throws IOException, SQLException {
 
         this.currencyDecider = new CurrencyCompoundDeciderByList(getCurrencyList());
         this.mainCompoundDecider = new MainCompoundDeciderRhea();
+        this.depth = depth;
     }
 
     private List<String> getCurrencyList(){
@@ -70,7 +73,7 @@ public class RheaReactionListRetriever extends AbstractReactionListRetriever imp
 
         Collection<MetabolicReaction> reactions = new ArrayList<MetabolicReaction>();
 
-        RheaRecursiveReactionGetter rxnGetter = new RheaRecursiveReactionGetter(1,currencyDecider,mainCompoundDecider,query.getOrganismIdentifier());
+        RheaRecursiveReactionGetter rxnGetter = new RheaRecursiveReactionGetter(depth,currencyDecider,mainCompoundDecider,query.getOrganismIdentifier());
 
         Compound compound =  rxnGetter.getRheaCompound(query.getChemicalIdentifier().getAccession());
 
