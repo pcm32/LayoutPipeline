@@ -30,6 +30,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>SBWRenderer</module>
+        <module>SVG-Batik-Renderer</module>
     </modules>
 
 
