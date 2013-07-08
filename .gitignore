@@ -5,3 +5,6 @@ LayoutPipeline.iws
 RenderingOutput.png
 src/main/resources/application.properties
 .idea
+.class
+target/
+.iml
