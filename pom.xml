@@ -21,7 +21,7 @@
 
   <groupId>uk.ac.ebi.pamela</groupId>
   <artifactId>LayoutPipeline</artifactId>
-  <version>1.0.4.5-SNAPSHOT</version>
+  <version>1.0.5</version>
     <modules>
         <module>Core</module>
         <module>DataSource</module>
