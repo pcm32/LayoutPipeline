@@ -19,7 +19,7 @@ public class BatikRendererTest {
 
         BatikRenderer batikRenderer = new BatikRenderer();
 
-        File tempDir = new File ("/tmp/svg/");//Files.createTempDir();
+        File tempDir = new File ("/opt/apache-tomcat-7.0.42/webapps/svg/");//Files.createTempDir();
 
         // Read the input SBML document from the resources folder...
         InputStream sbmlLayout = BatikRendererTest.class.getClassLoader().getResourceAsStream("sbml_layout_1.xml");

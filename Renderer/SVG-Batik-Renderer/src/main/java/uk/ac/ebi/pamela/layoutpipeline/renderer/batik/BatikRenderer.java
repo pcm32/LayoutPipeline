@@ -119,7 +119,7 @@ public class BatikRenderer  implements LayoutRenderer {
 
         AddDefinitions(document,svgRoot);
 
-        DrawCompartiment(dimensions, document, svgRoot);
+        DrawCompartiments(layout, document, svgRoot);
 
         DrawSpecies(layout, document, svgRoot);
 
@@ -189,6 +189,7 @@ public class BatikRenderer  implements LayoutRenderer {
                 ,"text-anchor", "middle"
                 ,"dominant-baseline", "central"
                 ,"fill", "black"
+                ,"id", textGlyph.getText()
 
         };
 
@@ -305,16 +306,26 @@ public class BatikRenderer  implements LayoutRenderer {
         }
     }
 
-    private void DrawCompartiment(Dimensions dimensions, Document document, Element svgRoot){
+
+    private void DrawCompartiments(Layout layout, Document document, Element svgRoot){
+
+        for (CompartmentGlyph compartmentGlyph: layout.getListOfCompartmentGlyphs()){
+            DrawCompartiment(document, svgRoot, compartmentGlyph);
+        }
+
+
+    }
+
+    private void DrawCompartiment( Document document, Element svgRoot, CompartmentGlyph compartmentGlyph){
 
         String[] compartimentAttributes = new String[]{
-                "x","0"
-                ,"y","0"
-                ,"width", String.valueOf(dimensions.getWidth())
-                ,"height", String.valueOf(dimensions.getHeight())
-                ,"rx", String.valueOf((dimensions.getWidth()*0.05))
-                ,"ry",String.valueOf((dimensions.getHeight()*0.05))
-                ,"style","fill:purple;stroke:gray;stroke-width:2;opacity:0.1"
+                "x",String.valueOf(compartmentGlyph.getBoundingBox().getPosition().getX())
+                ,"y",String.valueOf(compartmentGlyph.getBoundingBox().getPosition().getY())
+                ,"width", String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getWidth())
+                ,"height", String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getHeight())
+                ,"rx", String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getWidth()*0.05)
+                ,"ry",String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getHeight()*0.05)
+                ,"style","fill:rgb(200,200,200);stroke:black;stroke-width:2;opacity:0.5"
 
         };
 
