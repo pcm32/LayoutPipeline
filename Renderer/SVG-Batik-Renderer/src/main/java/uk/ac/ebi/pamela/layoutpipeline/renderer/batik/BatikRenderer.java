@@ -59,8 +59,8 @@ public class BatikRenderer  implements LayoutRenderer {
 
         Layout sbmlLayout = new Layout();
 
-//        LayoutModelPlugin extendedModel = (LayoutModelPlugin) model.getExtension(LayoutConstants.namespaceURI);
-        ExtendedLayoutModel extendedModel =  (ExtendedLayoutModel) model.getExtension(LayoutConstants.namespaceURI);
+        LayoutModelPlugin extendedModel = (LayoutModelPlugin) model.getExtension(LayoutConstants.namespaceURI);
+//        ExtendedLayoutModel extendedModel =  (ExtendedLayoutModel) model.getExtension(LayoutConstants.namespaceURI);
         if (extendedModel != null) {
             for (Layout layoutInModel : extendedModel.getListOfLayouts()) {
                 // Return the first layout...(There should be only one).
@@ -250,7 +250,7 @@ public class BatikRenderer  implements LayoutRenderer {
 
     private void DrawCurve(Document document, Element svgRoot, Curve curve){
 
-        for (CurveSegment segment:curve.getListOfCurveSegments()){
+        for (ICurveSegment segment : curve.getListOfCurveSegments()){
 
             DrawSegment(document, svgRoot, segment);
 
@@ -259,30 +259,11 @@ public class BatikRenderer  implements LayoutRenderer {
 
     }
 
-    private void DrawSegment(Document document, Element svgRoot, CurveSegment segment){
+    private void DrawSegment(Document document, Element svgRoot, ICurveSegment segment){
 
 
-        // if its a Line Segment
-        //if (segment instanceof LineSegment){
-        if (segment.getBasePoint1() == null){
-
-            LineSegment lineSegment = (LineSegment)segment;
-
-            String[] lineAttributes =new String[]{
-                    "x1", String.valueOf(lineSegment.getStart().getX())
-                    ,"y1", String.valueOf(lineSegment.getStart().getY())
-                    ,"x2", String.valueOf(lineSegment.getEnd().getX())
-                    ,"y2", String.valueOf(lineSegment.getEnd().getY())
-                    ,"style", "stroke:rgb(64,64,64);stroke-width:1;fill:none"
-
-            };
-
-            // Add the ellipse
-            AddDomElement(document,svgRoot,"line", lineAttributes, null);
-
-        // Its a CubicBezier segment
-//        } else if (segment instanceof CubicBezier) {
-        } else {
+        if (segment instanceof CubicBezier) {
+//        } else {
 
             CubicBezier cubicBezier = (CubicBezier)segment;
 
@@ -302,6 +283,24 @@ public class BatikRenderer  implements LayoutRenderer {
             // Add the ellipse
             AddDomElement(document,svgRoot,"path", lineAttributes, null);
 
+        } else if (segment instanceof LineSegment){
+//        if (segment.getBasePoint1() == null){
+
+            LineSegment lineSegment = (LineSegment)segment;
+
+            String[] lineAttributes =new String[]{
+                    "x1", String.valueOf(lineSegment.getStart().getX())
+                    ,"y1", String.valueOf(lineSegment.getStart().getY())
+                    ,"x2", String.valueOf(lineSegment.getEnd().getX())
+                    ,"y2", String.valueOf(lineSegment.getEnd().getY())
+                    ,"style", "stroke:rgb(64,64,64);stroke-width:1;fill:none"
+
+            };
+
+            // Add the ellipse
+            AddDomElement(document,svgRoot,"line", lineAttributes, null);
+
+        // Its a CubicBezier segment
         }
     }
 
