@@ -11,8 +11,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import uk.ac.ebi.pamela.layoutpipeline.LayoutRenderer;
+import uk.ac.ebi.pamela.layoutpipeline.renderer.batik.drawer.ReactionDrawer;
+import uk.ac.ebi.pamela.layoutpipeline.renderer.batik.drawer.SimpleReactionDrawer;
+import uk.ac.ebi.pamela.layoutpipeline.renderer.batik.marker.ArrowEndMarker;
+import uk.ac.ebi.pamela.layoutpipeline.renderer.batik.marker.ArrowStartMarker;
+import uk.ac.ebi.pamela.layoutpipeline.renderer.batik.marker.Marker;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -24,12 +32,22 @@ import java.io.*;
 public class BatikRenderer  implements LayoutRenderer {
 
     private static final Logger LOGGER = Logger.getLogger(BatikRenderer.class);
-    private static final String ARROW_ID = "arrow";
-    private static final String SHADOW_ID = "shadow" ;
+    private final String ARROW_ID = "arrow";
+    private final String SHADOW_ID = "shadow" ;
 
     private String outputFolder;
-    private static final String OUTPUT_FILE_NAME = "batikOutput.svg";
-    private static final String SVG_NS = SVGDOMImplementation.SVG_NAMESPACE_URI;
+    private final String OUTPUT_FILE_NAME = "batikOutput.svg";
+    private final String SVG_NS = SVGDOMImplementation.SVG_NAMESPACE_URI;
+
+    private final List<Marker> markers;
+
+    private ReactionDrawer reactionDrawer;
+    private DOMWriter writer;
+
+    public BatikRenderer() {
+        markers = new ArrayList<Marker>(Arrays.asList(new ArrowEndMarker(), new ArrowStartMarker()));
+    }
+
 
     public void produceRender(SBMLDocument sbmlWithLayout, String outputFilePrefix) {
 
@@ -117,6 +135,9 @@ public class BatikRenderer  implements LayoutRenderer {
         svgRoot.setAttributeNS(null, "width", String.valueOf(dimensions.getWidth()));
         svgRoot.setAttributeNS(null, "height", String.valueOf(dimensions.getHeight()));
 
+        this.writer = new DOMWriter(document);
+        this.reactionDrawer = new SimpleReactionDrawer(writer);
+
         AddDefinitions(document,svgRoot);
 
         DrawCompartiments(layout, document, svgRoot);
@@ -203,7 +224,8 @@ public class BatikRenderer  implements LayoutRenderer {
     private void DrawReactions(Layout layout, Document document, Element svgRoot){
 
         for (ReactionGlyph reactionGlyph: layout.getListOfReactionGlyphs()){
-            DrawReaction(document, svgRoot, reactionGlyph);
+            //DrawReaction(document, svgRoot, reactionGlyph);
+            this.reactionDrawer.draw(reactionGlyph,svgRoot);
         }
 
 
@@ -230,7 +252,7 @@ public class BatikRenderer  implements LayoutRenderer {
 
         }
 
-        DrawCurve(document,svgRoot,reactionGlyph.getCurve());
+        DrawCurve(document, svgRoot, reactionGlyph.getCurve());
 
         DrawSpeciesReferences(reactionGlyph,document,svgRoot);
 
@@ -245,7 +267,7 @@ public class BatikRenderer  implements LayoutRenderer {
 
     private void DrawSpeciesReference(Document document, Element svgRoot, SpeciesReferenceGlyph speciesReferenceGlyph){
 
-        DrawCurve(document,svgRoot, speciesReferenceGlyph.getCurve());
+        DrawCurve(document, svgRoot, speciesReferenceGlyph.getCurve());
 
     }
 
@@ -338,7 +360,13 @@ public class BatikRenderer  implements LayoutRenderer {
         // Add a definition section
         Element definition = AddDomElement(document,svgRoot,"defs");
 
-        AddArrowDefinition(document, definition);
+        for (Marker marker : markers) {
+            Element arrowMarker = writer.addDomElement(definition,"marker",marker.getAttributes());
+            writer.addDomElement(arrowMarker,"path", marker.getMarkerPath());
+        }
+
+        //AddArrowDefinition(document, definition);
+
 
         AddShadowDefinition(document,definition);
 
