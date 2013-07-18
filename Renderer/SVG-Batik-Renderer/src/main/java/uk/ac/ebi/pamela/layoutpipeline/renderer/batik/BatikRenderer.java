@@ -114,8 +114,13 @@ public class BatikRenderer  implements LayoutRenderer {
         // Get the root element (the 'svg' element).
         Element svgRoot = document.getDocumentElement();
 
-        svgRoot.setAttributeNS(null, "width", String.valueOf(dimensions.getWidth()));
-        svgRoot.setAttributeNS(null, "height", String.valueOf(dimensions.getHeight()));
+//        svgRoot.setAttributeNS(null, "width", String.valueOf(dimensions.getWidth()));
+//        svgRoot.setAttributeNS(null, "height", String.valueOf(dimensions.getHeight()));
+
+        // Allow it to be resizable in the browser
+        // Based on this: https://blueprints.launchpad.net/inkscape/+spec/allow-browser-resizing
+        svgRoot.setAttributeNS(null, "viewBox", "0 0 " + String.valueOf(dimensions.getWidth()) + " " +  String.valueOf(dimensions.getHeight()));
+
 
         AddDefinitions(document,svgRoot);
 
