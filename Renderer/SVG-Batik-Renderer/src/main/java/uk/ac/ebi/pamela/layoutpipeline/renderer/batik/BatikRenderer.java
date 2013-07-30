@@ -36,7 +36,7 @@ public class BatikRenderer  implements LayoutRenderer {
     private final String SHADOW_ID = "shadow" ;
 
     private String outputFolder;
-    private final String OUTPUT_FILE_NAME = "batikOutput.svg";
+    private final String OUTPUT_FILE_NAME_EXTENSION = ".svg";
     private final String SVG_NS = SVGDOMImplementation.SVG_NAMESPACE_URI;
 
     private final List<Marker> markers;
@@ -66,7 +66,7 @@ public class BatikRenderer  implements LayoutRenderer {
 
     private File getOutputFile(){
 
-        return new File (outputFolder + "/" + OUTPUT_FILE_NAME);
+        return new File (outputFolder +  OUTPUT_FILE_NAME_EXTENSION);
 
     }
 
@@ -182,6 +182,7 @@ public class BatikRenderer  implements LayoutRenderer {
                 ,"fill", "white"
                 ,"stroke", "black"
                 ,"stroke-width", "1"
+                ,"class", "svgSpecies"
                 //,"filter", "url(#" + SHADOW_ID + ")"
         };
 
@@ -216,6 +217,7 @@ public class BatikRenderer  implements LayoutRenderer {
                 ,"dominant-baseline", "central"
                 ,"fill", "black"
                 ,"id", textGlyph.getText()
+                ,"class", "svgText"
 
         };
 
@@ -250,6 +252,7 @@ public class BatikRenderer  implements LayoutRenderer {
                     ,"width", String.valueOf(reactionGlyph.getBoundingBox().getDimensions().getWidth())
                     ,"height", String.valueOf(reactionGlyph.getBoundingBox().getDimensions().getHeight())
                     ,"fill", "white"
+                    ,"class", "svgReactionBox"
             };
 
             // Add the ellipse
@@ -304,7 +307,11 @@ public class BatikRenderer  implements LayoutRenderer {
 
             String[] lineAttributes =new String[]{
                     "d", startPoint + " " + basePoint1 + " " + basePoint2 + " " + endPoint
-                    ,"style", "stroke:rgb(64,64,64);stroke-width:1;fill:none;marker-end:url(#" + ARROW_ID + ")"
+                    ,"stroke", "rgb(64,64,64)"
+                    ,"stroke-width", "1"
+                    ,"fill", "none"
+                    ,"marker-end", "url(#" + ARROW_ID + ")"
+                    ,"class", "svgBezier"
 
             };
 
@@ -321,7 +328,10 @@ public class BatikRenderer  implements LayoutRenderer {
                     ,"y1", String.valueOf(lineSegment.getStart().getY())
                     ,"x2", String.valueOf(lineSegment.getEnd().getX())
                     ,"y2", String.valueOf(lineSegment.getEnd().getY())
-                    ,"style", "stroke:rgb(64,64,64);stroke-width:1;fill:none"
+                    ,"stroke" , "rgb(64,64,64)"
+                    ,"stroke-width" ,"1"
+                    ,"fill" ,"none"
+                    ,"class", "svgLine"
 
             };
 
@@ -351,7 +361,11 @@ public class BatikRenderer  implements LayoutRenderer {
                 ,"height", String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getHeight())
                 ,"rx", String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getWidth()*0.05)
                 ,"ry",String.valueOf(compartmentGlyph.getBoundingBox().getDimensions().getHeight()*0.05)
-                ,"style","fill:rgb(200,200,200);stroke:black;stroke-width:2;opacity:0.5"
+                ,"fill", "rgb(200,200,200)"
+                ,"stroke", "black"
+                ,"stroke-width", "2"
+                ,"opacity", "0.5"
+                ,"class", "compartment"
 
         };
 
@@ -449,11 +463,14 @@ public class BatikRenderer  implements LayoutRenderer {
         // Create the marker for the arrow
         Element arrowMarker = AddDomElement(document,definition,"marker", markerAttributes);
 
-        // Add a market for the arrows
+        // Add a marker for the arrows
         String[] arrowPathAttributes = new String[]{
             "d", "M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z"
-            ,"style", "fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none;"
+            ,"stroke", "#000000"
+            , "strike-width", "1.0pt"
+            ,"style", "fill-rule:evenodd;marker-start:none;"
             ,"transform", "scale(0.4) rotate(180) translate(10,0)"
+            ,"class", "svgArrow"
         };
 
         AddDomElement(document,arrowMarker,"path", arrowPathAttributes);

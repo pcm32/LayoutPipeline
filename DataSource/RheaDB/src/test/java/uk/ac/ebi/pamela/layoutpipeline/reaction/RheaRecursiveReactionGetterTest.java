@@ -41,7 +41,7 @@ public class RheaRecursiveReactionGetterTest {
 
     @Test
     public void testGetRheaCompound(){
-        RheaRecursiveReactionGetter rheaReactionRetriever = new RheaRecursiveReactionGetter(1,null,null,null);
+        RheaRecursiveReactionGetter rheaReactionRetriever = new RheaRecursiveReactionGetter(1,null,null);
 
 
         // bisdemethoxycurcumin: http://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI%3A71045&conversationContext=b
@@ -62,7 +62,7 @@ public class RheaRecursiveReactionGetterTest {
     public void testGetReactions() throws Exception {
 
 
-        RheaRecursiveReactionGetter rheaReactionRetriever = new RheaRecursiveReactionGetter(0,null,null,null);
+        RheaRecursiveReactionGetter rheaReactionRetriever = new RheaRecursiveReactionGetter(0,null,null);
 
         Compound compound = rheaReactionRetriever.getRheaCompound(CHEBIID_TEST);
 
@@ -162,7 +162,7 @@ public class RheaRecursiveReactionGetterTest {
         MainCompoundDecider mcdr = new MainCompoundDeciderRhea();
 
         Taxonomy taxon = new Taxonomy();
-        taxon.setAccession("hola");
+        taxon.setAccession("9606");
 
         RheaRecursiveReactionGetter rheaReactionRetriever = new RheaRecursiveReactionGetter(1,ccdl,mcdr,taxon);
 

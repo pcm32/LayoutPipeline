@@ -31,6 +31,7 @@
     <modules>
         <module>PAMELA-SBW-Exec</module>
         <module>Rhea-SBW-Exec</module>
+        <module>Rhea-Batik-Exec</module>
     </modules>
 
 

@@ -66,7 +66,7 @@ public class SimpleOrgMolQuery implements Query {
      */
     public SimpleOrgMolQuery(String chebiID, String orgTaxID) {
         this.organismIdentifier = new Taxonomy();
-        this.organismIdentifier.setAccession(orgTaxID);
+        if (!orgTaxID.equals(""))  this.organismIdentifier.setAccession(orgTaxID);
         this.chemicalIdentifier = new ChEBIIdentifier(chebiID);
     }
 

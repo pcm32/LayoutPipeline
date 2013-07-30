@@ -65,6 +65,16 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
         connectToRhea();
     }
 
+    public RheaRecursiveReactionGetter(Integer depth, MainCompoundDecider<Compound, RheaReactionWrapper> mainCompDecider, Taxonomy specie) {
+
+        super(depth,null,mainCompDecider);
+
+        this.currencyDec = new CurrencyCompoundDeciderByList(Arrays.asList(new String[]{}));
+
+        this.specie = specie;
+        connectToRhea();
+    }
+
     private void connectToRhea(){
         this.rheaConnection = RheaConnectionManager.getConnection();
     }
@@ -170,8 +180,13 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
                     LOGGER.debug("UniprotId  " + xRef.getName() + " found for RHEA:" + reaction.getId());
 
                     if (hasUniprotIdTheSpecie(xRef.getAccessionNumber())){
+
+                        System.out.println("hola");
+
                         return true;
                     }
+
+                    System.out.println("adios");
                 }
             }
 
@@ -263,8 +278,11 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
             // Rhea compound name has some xml tags like <strong> <super> ....we need to clean this.
             String compoundName = xchars.xml2Display(comp.getName(), EncodingType.CHEBI_CODE);
 
+            Metabolite metabolite = new MetaboliteImpl(UUID.nameUUIDFromBytes(comp.getAccession().getBytes()));
 
-            Metabolite metabolite = new MetaboliteImpl(new ChEBIIdentifier(comp.getAccession()),"",compoundName);
+            metabolite.setIdentifier(new ChEBIIdentifier(comp.getAccession()));
+            metabolite.setAbbreviation("");
+            metabolite.setName(compoundName);
 
             MetabolicParticipant met = new MetabolicParticipantImplementation(metabolite, Double.valueOf(rp.getCoefficient().getValue()));
 

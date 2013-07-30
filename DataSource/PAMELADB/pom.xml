@@ -52,6 +52,10 @@
                     <groupId>com.sri</groupId>
                     <artifactId>BioWarehouse-ElementMap</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>sf.net</groupId>
+                    <artifactId>lpsolve</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>

@@ -9,14 +9,14 @@ import uk.ac.ebi.pamela.layoutpipeline.renderer.batik.DOMWriter;import uk.ac.ebi
  */
 public class AbstractDrawer {
 
-    DOMWDOMWriter er;
+    DOMWriter writer;
 
     public AbstractDrawer(DOMWriter writer) {
         this.writer = writer;
     }
 
     String getArrowsString(Boolean endArrow, Boolean startArrow) {
-        String startArrowTxt = startArrow ? "marker-start:url(#"+ MarkMarkersowStart.toString() + ");" : "";
+        String startArrowTxt = startArrow ? "marker-start:url(#"+ startArrow.toString() + ");" : "";
         String endArrowTxt = endArrow ? "marker-end:url(#" + Markers.ArrowEnd.toString() +");" : "";
         return startArrowTxt + endArrowTxt;
     }

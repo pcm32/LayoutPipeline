@@ -39,7 +39,7 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
 
     private Set<C> visitedChemicals;
     private Set<R> visitedReactions;
-    private CurrencyCompoundDecider<C, R> currencyDec;
+    protected CurrencyCompoundDecider<C, R> currencyDec;
     private MainCompoundDecider<C, R> mainCompDec;
     private Integer depth;
     private Integer maxReactions;
@@ -170,7 +170,12 @@ public abstract class AbstractRecursiveReactionGetter<C, R> {
     abstract Collection<R> getReactionsForChemical(C chem);
 
     /**
-     * Converts the independent model reaction into a metabolic reaction.
+     * Converts the independent model reaction into a metabolic reaction. Given that the uniqueness of participants is
+     * evaluated by the {@link uk.ac.ebi.mdk.domain.entity.Reconstruction} object through the UUID of the elements,
+     * whenever a new reaction participant is added, it needs to have its UUID generated from a stable identifier IF the
+     * same specie could be added again (because of the way in which the traversal of reactions go). This is normally
+     * accomplished by using UUID.nameUUIDFromBytes() and giving the stable identifier as argument.
+     *
      *
      * @param rxn the rxn in the external domain model to be transformed to the mdk model reaction.
      * @return the converted metabolic reaction.

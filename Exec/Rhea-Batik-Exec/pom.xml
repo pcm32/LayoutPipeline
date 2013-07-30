@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>Rhea-SBW-Exec</artifactId>
+    <artifactId>Rhea-Batik-Exec</artifactId>
 
     <dependencies>
         <dependency>
@@ -19,12 +19,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>SBWRenderer</artifactId>
+            <artifactId>SBW</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>SBW</artifactId>
+            <artifactId>SVG-Batik-Renderer</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

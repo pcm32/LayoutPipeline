@@ -49,7 +49,7 @@ public class CurrencyCompoundDeciderByList implements CurrencyCompoundDecider<Co
 
 
         // If there is no currency list ...there will not be any currency metabolite
-        if (currencylist == null || currencylist.size()==0) return null;
+        if (currencylist == null || currencylist.size()==0) return new ArrayList<Compound>();
 
         Reaction rxn = rheaWrapper.getRheaReaction();
 
