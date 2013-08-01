@@ -28,7 +28,6 @@ import uk.ac.ebi.mdk.domain.identifier.Taxonomy;
 import uk.ac.ebi.mdk.domain.identifier.UniProtIdentifier;
 import uk.ac.ebi.mdk.service.query.orthology.UniProtECNumber2OrganismProteinService;
 import uk.ac.ebi.pamela.layoutpipeline.rhea.RheaConnectionManager;
-import uk.ac.ebi.pamela.layoutpipeline.utils.PropertiesUtil;
 import uk.ac.ebi.rhea.domain.*;
 import uk.ac.ebi.rhea.mapper.MapperException;
 import uk.ac.ebi.rhea.mapper.SearchOptions;
@@ -41,7 +40,7 @@ import uk.ac.ebi.xchars.domain.EncodingType;
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
-import uk.ac.ebi.pamela.layoutpipeline.utils.RheaDBConnectionSetter;
+
 
 
 /**
@@ -181,12 +180,10 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
 
                     if (hasUniprotIdTheSpecie(xRef.getAccessionNumber())){
 
-                        System.out.println("hola");
-
                         return true;
                     }
 
-                    System.out.println("adios");
+
                 }
             }
 
@@ -221,7 +218,19 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
         Reaction rhea = rheawrapper.getRheaReaction();
 
         // Populate with Rhea reaction values
-        mr.setDirection(Direction.UNKNOWN);
+
+        switch (rheawrapper.getRheaReaction().getDirection()){
+
+            case BI: mr.setDirection(Direction.BIDIRECTIONAL);
+                    break;
+
+            case LR: mr.setDirection(Direction.FORWARD);
+                break;
+            case RL: mr.setDirection(Direction.BACKWARD);
+                break;
+            case UN: mr.setDirection(Direction.BIDIRECTIONAL);
+                break;
+        }
 
         Collection<Compound> currencyComps = getCurrencyDecider().getCurrencyMetabolites(rheawrapper);
 
