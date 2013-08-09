@@ -3,8 +3,7 @@ package uk.ac.ebi.pamela.layoutpipeline.renderer.batik;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
 import org.apache.batik.dom.util.DOMUtilities;
 import org.apache.log4j.Logger;
-import org.sbml.jsbml.Model;
-import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.*;
 import org.sbml.jsbml.ext.layout.*;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -33,7 +32,6 @@ public class BatikRenderer  implements LayoutRenderer {
 
     private static final Logger LOGGER = Logger.getLogger(BatikRenderer.class);
     private final String ARROW_ID = "arrow";
-    private final String SHADOW_ID = "shadow" ;
 
     private String outputFolder;
     private final String OUTPUT_FILE_NAME_EXTENSION = ".svg";
@@ -183,11 +181,67 @@ public class BatikRenderer  implements LayoutRenderer {
                 ,"stroke", "black"
                 ,"stroke-width", "1"
                 ,"class", "svgSpecies"
+                ,"id", getChebiIdFormSpecies(speciesGlyph)
                 //,"filter", "url(#" + SHADOW_ID + ")"
         };
 
         // Add the ellipse
         AddDomElement(document,svgRoot,"ellipse", ellipseAttributes, null);
+
+    }
+    // Extract the Chebi Id from the Speciesglyph...now we will parse it from the id member (like CHEBI12344_c)...
+    // In the future we should store it properly in the annotations collection and take it from there.
+    private String getChebiIdFormSpecies(SpeciesGlyph speciesGlyph){
+
+//        // This should be something like "CHEBI12345_c"
+//        String id = speciesGlyph.getReference();
+//
+//        // Remove last bits...
+//        id = id.replace("_c","").replace("CHEBI", "CHEBI:");
+//
+//        return id;
+
+
+        // Get the species object the is representing
+        Species sp = (Species) speciesGlyph.getSpeciesInstance();
+
+        Annotation annotation = sp.getAnnotation();
+
+        if (annotation != null){
+
+            for (CVTerm cvTerm : annotation.getListOfCVTerms()){
+
+                for (String resourceURI: cvTerm.getResources()){
+                    if (resourceURI.contains("CHEBI:")){
+
+                        // THis contains a identifiers.org URL...
+                        // http://identifiers.org/chebi/CHEBI:25858/
+
+                        String id = resourceURI.replace("http://identifiers.org/chebi/CHEBI:", "MTBLC");
+
+                        // Now we should have: MTBLC25858/....remove last /
+                        id = id.replace("/", "");
+
+                        return id;
+                    }
+                }
+
+            }
+        }
+
+        return "";
+
+
+    }
+
+    private String getChebiIdFormText(TextGlyph textGlyph){
+
+        // This should be something like "CHEBI12345_c"
+        SpeciesGlyph sg = (SpeciesGlyph) textGlyph.getGraphicalObjectInstance();
+
+
+        return getChebiIdFormSpecies(sg);
+
 
     }
 
@@ -216,7 +270,7 @@ public class BatikRenderer  implements LayoutRenderer {
                 ,"text-anchor", "middle"
                 ,"dominant-baseline", "central"
                 ,"fill", "black"
-                ,"id", textGlyph.getText()
+                ,"id", getChebiIdFormText(textGlyph)
                 ,"class", "svgText"
 
         };
@@ -383,70 +437,6 @@ public class BatikRenderer  implements LayoutRenderer {
             Element arrowMarker = writer.addDomElement(definition,"marker",marker.getAttributes());
             writer.addDomElement(arrowMarker,"path", marker.getMarkerPath());
         }
-
-        //AddArrowDefinition(document, definition);
-
-
-        AddShadowDefinition(document,definition);
-
-
-
-    }
-
-    private void AddShadowDefinition(Document document, Element definition) {
-        /*
-
-        <filter id="f1" x="0" y="0" width="200%" height="200%">
-            <feOffset result="offOut" in="SourceAlpha" dx="20" dy="20" />
-            <feGaussianBlur result="blurOut" in="offOut" stdDeviation="10" />
-            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-        </filter>
-
-         */
-
-
-        // Add a filter for the shadow --> <filter id="f1" x="0" y="0" width="200%" height="200%">
-        String[] filterAttributes = new String[]{
-                "id", SHADOW_ID
-                ,"x","0"
-                ,"y", "0"
-                ,"width", "200%"
-                ,"height", "200%"
-        };
-
-        // Create the filter element for the shadow
-        Element shadowFilter = AddDomElement(document,definition,"filter", filterAttributes);
-
-
-
-        // Add a feOffset --> <feOffset result="offOut" in="SourceAlpha" dx="20" dy="20" />
-        String[] feOffsetAttributes = new String[]{
-                "result", "offOut"
-                ,"in", "SourceAlpha"
-                ,"dx", "20"
-                ,"dy", "20"
-        };
-
-        AddDomElement(document,shadowFilter,"feOffset", feOffsetAttributes);
-
-        // Add a feGaussianBlur --> <feGaussianBlur result="blurOut" in="offOut" stdDeviation="10" />
-        String[] feGaussianBlurAttributes = new String[]{
-                "result", "blurOut"
-                ,"in", "offOut"
-                ,"stdDeviation", "10"
-        };
-
-        AddDomElement(document,shadowFilter,"feGaussianBlur", feGaussianBlurAttributes);
-
-
-        // Add a feBlend --> <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-        String[] feBlendAttributes = new String[]{
-                "in", "SourceGraphic"
-                ,"in2", "blurOut"
-                ,"mode", "normal"
-        };
-
-        AddDomElement(document,shadowFilter,"feBlend", feGaussianBlurAttributes);
 
     }
 

@@ -18,6 +18,8 @@
 package uk.ac.ebi.pamela.layoutpipeline.reaction;
 
 import org.apache.log4j.Logger;
+import uk.ac.ebi.mdk.domain.annotation.Annotation;
+import uk.ac.ebi.mdk.domain.annotation.crossreference.ChEBICrossReference;
 import uk.ac.ebi.mdk.domain.entity.Metabolite;
 import uk.ac.ebi.mdk.domain.entity.MetaboliteImpl;
 import uk.ac.ebi.mdk.domain.entity.reaction.*;
@@ -295,6 +297,7 @@ private SpecialCharacters xchars = SpecialCharacters.getInstance(null);
 
             MetabolicParticipant met = new MetabolicParticipantImplementation(metabolite, Double.valueOf(rp.getCoefficient().getValue()));
 
+            metabolite.addAnnotation(new ChEBICrossReference(new ChEBIIdentifier(comp.getAccession())));
 
 
             return met;

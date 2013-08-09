@@ -20,6 +20,8 @@ import java.io.FileReader;
  */
 public class PipelineExecRhea {
 
+    private static final Integer DEPTH = 1;
+
     public static void main(String[] args) throws Exception {
 
         String pathToOut = args[0];
@@ -28,7 +30,7 @@ public class PipelineExecRhea {
         String layoutExe = PropertiesUtil.getPreference(SBWAlgorithmPrefsSetter.SBWAlgPrefsField.pathToSaveLayoutEXE,"/Users/conesa/Development/AutoLayoutWithoutLibSBML/SaveLayout.exe");
 
         // No specie information so far...
-        ReactionListRetriever retriever = new RheaReactionListRetriever(1);
+        ReactionListRetriever retriever = new RheaReactionListRetriever(DEPTH);
         SBWAutoLayouterAlgorithmOptions optionLayout = new SBWAutoLayouterAlgorithmOptions();
         optionLayout.setGravityFactor(120);
         optionLayout.setMagnetism(true);
@@ -53,6 +55,8 @@ public class PipelineExecRhea {
             Query query = new SimpleOrgMolQuery(identObj.getAccession(), organismTaxId);
             PipelineExec pipeline = new PipelineExec(query, retriever,layoutAlg,layoutRend,2, 3, pathToOut);
             pipeline.run();
+
+            ReactionRecursionDepthMonitor.getMonitor("Rhea").register(query, DEPTH,count);
             count++;
             Float speed = (count + 0f) / ((System.currentTimeMillis() - startTime) / 1000);
             if (count % 10 == 0) {
