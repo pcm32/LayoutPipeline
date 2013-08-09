@@ -11,5 +11,22 @@
 
     <artifactId>PAMELA-Batik-Exec</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>uk.ac.ebi.pamela</groupId>
+            <artifactId>PAMELADB</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pamela</groupId>
+            <artifactId>SBW</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pamela</groupId>
+            <artifactId>SVG-Batik-Renderer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

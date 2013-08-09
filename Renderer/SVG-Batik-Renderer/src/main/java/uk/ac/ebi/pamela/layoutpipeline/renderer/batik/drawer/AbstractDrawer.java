@@ -16,7 +16,7 @@ public class AbstractDrawer {
     }
 
     String getArrowsString(Boolean endArrow, Boolean startArrow) {
-        String startArrowTxt = startArrow ? "marker-start:url(#"+ startArrow.toString() + ");" : "";
+        String startArrowTxt = startArrow ? "marker-start:url(#"+ Markers.ArrowStart.toString() + ");" : "";
         String endArrowTxt = endArrow ? "marker-end:url(#" + Markers.ArrowEnd.toString() +");" : "";
         return startArrowTxt + endArrowTxt;
     }
