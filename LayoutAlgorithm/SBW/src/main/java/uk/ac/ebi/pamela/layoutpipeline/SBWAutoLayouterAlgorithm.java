@@ -77,6 +77,14 @@ public class SBWAutoLayouterAlgorithm implements LayoutAlgorithm {
      * 
      * SaveLayout.exe is part of AutoLayoutWithoutLibSBML.zip, this needs to be unziped and then copy libsbml* from 
      * the linux SBW/lib installation into the directory (SBW needs to be downloaded of course).
+     *
+     * Copy the AutoLayout.dll which has date Apr 8 2013 or newer into the SBW/lib folder.
+     *
+     * Copy the SBMLExtension.dll which has date Feb 22 2013 or newer into the SBW/lib folder.
+     *
+     * Copy the SBMLLayoutReader.exe which has date Mar 11 2013 or newer into the SBW/lib folder.
+     *
+     * Copy the contents of the 2013-04-05_-_Layout_xsl folder to SBW/lib directory.
      * 
      * mono framework needs to be installed as well: www.mono-project.com/
      * 
