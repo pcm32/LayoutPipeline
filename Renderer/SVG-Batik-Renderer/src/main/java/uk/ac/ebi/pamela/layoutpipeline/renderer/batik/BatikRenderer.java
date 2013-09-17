@@ -145,11 +145,11 @@ public class BatikRenderer  implements LayoutRenderer {
 
         DrawCompartiments(layout, document, svgRoot);
 
-        DrawSpecies(layout, document, svgRoot);
-
         DrawReactions(layout,document,svgRoot);
 
-        DrawTexts(layout,document,svgRoot);
+		DrawSpecies(layout, document, svgRoot);
+
+		DrawTexts(layout,document,svgRoot);
 
         return document;
 

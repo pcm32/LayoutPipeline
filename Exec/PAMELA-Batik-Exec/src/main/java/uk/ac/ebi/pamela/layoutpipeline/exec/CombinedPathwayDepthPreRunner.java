@@ -59,7 +59,7 @@ public class CombinedPathwayDepthPreRunner {
         this.identifiers.addAll(idents);
         this.outputPath = outpath;
         createDirs();
-        this.linkMaker = new LinkMaker(outputPath,pathwaysDir,new PAMELAPathwayFileNamer(".png"), new LayoutFileNamer(".png"));
+        this.linkMaker = new LinkMaker(outputPath,pathwaysDir,new PAMELAPathwayFileNamer(".svg"), new LayoutFileNamer(".svg"));
 
     }
 
@@ -195,7 +195,14 @@ public class CombinedPathwayDepthPreRunner {
             System.exit(1);
         }
 
-        BufferedReader reader = new BufferedReader(new FileReader(args[0]));
+		String fileWithIds = args[0];
+		System.out.println("File with ids is " + fileWithIds);
+
+
+		String output = args[1];
+		System.out.println("Output will go to " + output);
+
+        BufferedReader reader = new BufferedReader(new FileReader(fileWithIds));
         String line = reader.readLine();
         Collection<ChemicalIdentifier> idents = new LinkedList<ChemicalIdentifier>();
         while (line!=null) {
@@ -203,7 +210,7 @@ public class CombinedPathwayDepthPreRunner {
             line = reader.readLine();
         }
         reader.close();
-        CombinedPathwayDepthPreRunner runner = new CombinedPathwayDepthPreRunner(ds,tax,new PAMELAPreUnificationPathwayGetter(ds),idents,args[1]);
+        CombinedPathwayDepthPreRunner runner = new CombinedPathwayDepthPreRunner(ds,tax,new PAMELAPreUnificationPathwayGetter(ds),idents,output);
         runner.run();
     }
 
