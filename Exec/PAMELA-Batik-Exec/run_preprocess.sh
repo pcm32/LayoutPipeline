@@ -1,4 +1,4 @@
-# This script will generate all the files needed to run the later process (those that genetrate the svg, either based on pathways or in PAMELA depth approach)
+# This script will generate all the files needed to run the later process (those that generate the svg, either based on pathways or in PAMELA depth approach)
 
 OUTPUT=$2
 FILE_WITH_IDS=$1
