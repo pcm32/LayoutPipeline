@@ -7,5 +7,4 @@ echo "Ouputing to $OUTPUT"
 
 echo "Generating files with list of pathways and chebiIds to use in later process.\n"
 
-
-mvn -e -X exec:java -Dexec.mainClass="uk.ac.ebi.pamela.layoutpipeline.exec.CombinedPathwayDepthPreRunner" -Dexec.args="$FILE_WITH_IDS $OUTPUT"
+mvn -Dlog4j.configuration="file:/Users/conesa/Development/git/LayoutPipeline/Exec/PAMELA-Batik-Exec/log4j.properties" exec:java -Dexec.mainClass="uk.ac.ebi.pamela.layoutpipeline.exec.CombinedPathwayDepthPreRunner" -Dexec.args="$FILE_WITH_IDS $OUTPUT"

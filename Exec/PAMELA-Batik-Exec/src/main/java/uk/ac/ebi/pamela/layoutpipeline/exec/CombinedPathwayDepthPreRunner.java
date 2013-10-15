@@ -147,7 +147,13 @@ public class CombinedPathwayDepthPreRunner {
 
         public void writeLinkCreationCommand(Query query, int pathCounter, Pathway pathway) {
             try {
-                this.writer.write("ln -s "+pathwayDir+File.separator+pathwayFileNamer.getFileName(query, pathway)+" "+layoutNamer.getName(query,pathCounter)+"\n");
+//                this.writer.write("ln -s "+pathwayDir+File.separator+pathwayFileNamer.getFileName(query, pathway)+" "+layoutNamer.getName(query,pathCounter)+"\n");
+
+				String chebiId = query.getChemicalIdentifier().getAccession();
+
+				String mtblc = chebiId.replace("CHEBI:", "MTBLC");
+
+				this.writer.write("cp "+pathwayDir+File.separator+pathwayFileNamer.getFileName(query, pathway)+" ../../" + mtblc+"/"+layoutNamer.getName(query,pathCounter)+"\n");
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
